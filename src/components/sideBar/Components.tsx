@@ -1,26 +1,28 @@
 import React from "react";
 import Button from "../Button";
 
-const Components = () => {
+type AddDivFunction = (uiElementType: "label" | "button" | "input") => void;
+
+const Components: React.FC<{ addDiv: AddDivFunction }> = ({ addDiv }) => {
   return (
     <div className="mt-2 flex flex-col border-t border-slate-300 pt-2">
       <Button
         text="Labels"
-        onClick={() => console.log("add labels")}
+        onClick={() => addDiv("label")}
         padding="small"
         variant="neutral"
         textAlign="left"
       />
       <Button
         text="Buttons"
-        onClick={() => console.log("add buttons")}
+        onClick={() => console.log("add button")}
         padding="small"
         variant="neutral"
         textAlign="left"
       />
       <Button
-        text="Input Fields"
-        onClick={() => console.log("add input fields")}
+        text="Input Field"
+        onClick={() => console.log("add input")}
         padding="small"
         variant="neutral"
         textAlign="left"

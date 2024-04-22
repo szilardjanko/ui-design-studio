@@ -4,7 +4,7 @@ import { useTheme } from "@/context/ThemeContext";
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: React.ReactNode;
   padding?: "small" | "medium" | "large" | "squareMedium" | "custom";
-  variant?: "neutral" | "accept" | "submit" | "remove";
+  variant?: "neutral" | "accept" | "submit" | "remove" | "selected";
   textAlign?: "left" | "center" | "right";
 }
 
@@ -13,15 +13,13 @@ const getVariantClasses = (variant: string, theme: string) => {
     switch (variant) {
       case "neutral":
         return "border border-black hover:bg-gradient-to-tl hover:from-slate-700 hover:to-slate-900 hover:border-slate-400";
-      default:
-        return "border border-black hover:bg-gradient-to-tl hover:from-slate-700 hover:to-slate-900 hover:border-slate-400";
+      case "selected":
+        return "border border-slate-500 bg-gradient-to-tl from-slate-700 to-slate-900 hover:border-slate-400";
     }
-  } else {
+  } else if (theme === "light") {
     switch (variant) {
       case "neutral":
-        return "hover:bg-slate-400";
-      default:
-        return "hover:bg-slate-400";
+        return "border border-black hover:bg-gradient-to-tl hover:from-slate-300 hover:to-slate-500 hover:border-slate-400";
     }
   }
 };
@@ -56,7 +54,7 @@ const Button: React.FC<ButtonProps> = ({
   text,
   padding = "medium",
   variant = "neutral",
-  textAlign = "left",
+  textAlign = "center",
   className = "",
   ...rest
 }) => {
