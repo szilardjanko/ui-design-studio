@@ -7,6 +7,8 @@ import Components from "@/components/sideBar/Components";
 import { ZoomControl } from "@/components/controls/ZoomControl";
 import { GridControls } from "@/components/controls/GridControls";
 import Button from "@/components/Button";
+import { SelectedDivEditor } from "@/components/SelectedDivEditor";
+import { UiCode } from "@/components/uiCode/uiCode";
 
 export type Div = {
   uiElementType: "label" | "button" | "input";
@@ -14,6 +16,7 @@ export type Div = {
   text: string;
   size: { width: number; height: number };
   backgroundColor: string;
+  lock: boolean;
 };
 
 const CreateUi = () => {
@@ -26,6 +29,7 @@ const CreateUi = () => {
   const gridRows = 9 * gridSize;
   const [cellWidth, setCellWidth] = useState(0);
   const [cellHeight, setCellHeight] = useState(0);
+  const [selectedDivIndex, setSelectedDivIndex] = useState<number | null>(null);
 
   const [zoomLevel, setZoomLevel] = useState(1);
 
@@ -89,6 +93,7 @@ const CreateUi = () => {
         text: `New UI ${uiElementType} ${divs.length + 1}`,
         size: { width: initialWidthPct, height: initialHeightPct },
         backgroundColor: "#F1F1F1",
+        lock: false,
       },
     ]);
   };
@@ -110,6 +115,60 @@ const CreateUi = () => {
           : div,
       ),
     );
+  };
+
+  const updateSize = (
+    index: number,
+    newSize:
+      | { width: number; height: number }
+      | ((prevSize: { width: number; height: number }) => {
+          width: number;
+          height: number;
+        }),
+  ) => {
+    setDivs(
+      divs.map((div, i) =>
+        i === index
+          ? {
+              ...div,
+              size: typeof newSize === "function" ? newSize(div.size) : newSize,
+            }
+          : div,
+      ),
+    );
+  };
+
+  const updateText = (
+    index: number,
+    newText: string | ((prevText: string) => string),
+  ) => {
+    setDivs(
+      divs.map((div, i) =>
+        i === index
+          ? {
+              ...div,
+              text: typeof newText === "function" ? newText(div.text) : newText,
+            }
+          : div,
+      ),
+    );
+  };
+
+  const handleDivClick = (index: number) => {
+    setSelectedDivIndex(index);
+  };
+
+  const handleSetLock = (selectedDivIndex: number, lock: boolean) => {
+    const updatedDivs = [...divs];
+    updatedDivs[selectedDivIndex].lock = lock;
+    setDivs(updatedDivs);
+  };
+
+  const handleDelete = () => {
+    if (selectedDivIndex === null) return;
+    const updatedDivs = divs.filter((_, index) => index !== selectedDivIndex);
+    setDivs(updatedDivs);
+    setSelectedDivIndex(null);
   };
 
   const handleIncreaseGridSize = () => {
@@ -161,6 +220,11 @@ const CreateUi = () => {
               setZoomLevel={setZoomLevel}
             />
           </div>
+          {divs.length != 0 && (
+            <div className="mt-2 border-t pt-2">
+              <UiCode divs={divs} />
+            </div>
+          )}
         </div>
         <div className="overflow-auto" style={{ width: "100vw" }}>
           <div
@@ -201,12 +265,27 @@ const CreateUi = () => {
                     updatePosition(index, newPosition)
                   }
                   size={div.size}
+                  setSize={(newSize) => updateSize(index, newSize)}
                   text={div.text}
+                  setText={(newText) => updateText(index, newText)}
                   backgroundColor={div.backgroundColor}
                   startPosition={{ x: 0, y: 0 }}
                   setStartPosition={() => {}}
                   snapToGrid={snapToGrid}
+                  cellHeight={cellHeight}
+                  cellWidth={cellWidth}
+                  zoomLevel={zoomLevel}
+                  targetDimensions={{
+                    width: targetRef.current?.offsetWidth
+                      ? targetRef.current.offsetWidth
+                      : 0,
+                    height: targetRef.current?.offsetHeight
+                      ? targetRef.current.offsetHeight
+                      : 0,
+                  }}
                   targetRef={targetRef}
+                  onSelect={() => handleDivClick(index)}
+                  lock={div.lock}
                 />
               ))}
             </div>
@@ -214,6 +293,26 @@ const CreateUi = () => {
         </div>
       </div>
       <div className="flex-grow"></div>
+      <div className="flex w-full flex-row items-end justify-between overflow-y-auto text-center">
+        {selectedDivIndex != null && (
+          <div className="m-2 mx-auto flex w-5/6 flex-row justify-evenly">
+            <SelectedDivEditor
+              div={divs[selectedDivIndex]}
+              onTextChange={(newText: string) =>
+                updateText(selectedDivIndex, newText)
+              }
+              handleSetLock={(lock: boolean) => {
+                handleSetLock(selectedDivIndex, lock);
+              }}
+              onDelete={handleDelete}
+            />
+          </div>
+        )}
+
+        <div className="flex flex-col items-end p-2">
+          <button onClick={() => console.log(divs)}>Log Divs</button>
+        </div>
+      </div>
     </div>
   );
 };

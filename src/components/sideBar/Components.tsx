@@ -15,14 +15,14 @@ const Components: React.FC<{ addDiv: AddDivFunction }> = ({ addDiv }) => {
       />
       <Button
         text="Buttons"
-        onClick={() => console.log("add button")}
+        onClick={() => addDiv("button")}
         padding="small"
         variant="neutral"
         textAlign="left"
       />
       <Button
         text="Input Field"
-        onClick={() => console.log("add input")}
+        onClick={() => addDiv("input")}
         padding="small"
         variant="neutral"
         textAlign="left"
