@@ -8,12 +8,12 @@ export const Footer = () => {
         <Link
           href="https://github.com/szilardjanko/ui-design-studio"
           target="_blank"
-          className="px-3 py-2 hover:bg-slate-700"
+          className="px-3 py-2 text-white hover:bg-slate-700"
         >
           Github
         </Link>
       </div>
-      <div className="">DCL UI Design Studio</div>
+      <div className="text-white">DCL UI Design Studio</div>
       <div className="mr-2"></div>
     </div>
   );

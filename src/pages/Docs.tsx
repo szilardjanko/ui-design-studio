@@ -2,7 +2,7 @@ import React from "react";
 
 const Docs = () => {
   return (
-    <div className="flex flex-grow flex-col">
+    <div className="flex flex-grow flex-col text-white">
       <div className="mx-auto text-3xl font-bold md:text-4xl">
         Documentation
       </div>

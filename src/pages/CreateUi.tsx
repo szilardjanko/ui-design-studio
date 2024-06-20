@@ -389,8 +389,8 @@ const CreateUi = () => {
           />
         ) : (
           <div className="my-2 ml-44 flex w-fit select-none flex-col justify-start border-x border-slate-700 bg-slate-800">
-            <div className="flex justify-between border-y border-slate-500 bg-gradient-to-tl from-slate-600 to-slate-900 px-4 py-2 shadow shadow-slate-700">
-              <div>No UI Element Selected</div>
+            <div className="flex justify-between border-y border-slate-500 bg-gradient-to-tl from-slate-600 to-slate-900 px-4 py-2 text-white shadow shadow-slate-700">
+              No UI Element Selected
             </div>
           </div>
         )}

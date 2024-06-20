@@ -59,7 +59,7 @@ export const SelectedDivEditor: React.FC<SelectedDivEditorProps> = ({
   return (
     <div className="my-2 ml-44 flex w-fit select-none flex-col justify-start rounded-b-xl border-x border-b border-slate-700 bg-slate-800">
       <div className="flex justify-between border-y border-slate-500 bg-gradient-to-tl from-slate-600 to-slate-900 p-2 pl-4 shadow shadow-slate-700">
-        <div>
+        <div className="text-white">
           Selected UI Element:{" "}
           {div.text === ""
             ? "Unnamed - " + div.uiElementType

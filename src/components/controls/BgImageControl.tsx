@@ -33,7 +33,7 @@ export const BgImageControl = ({
         {isBgImageLeft && <CaretLeft />}
       </div>
       <div
-        className="w-24 text-center"
+        className="w-24 text-center text-white"
         onClick={() => {
           setBgImage("");
           setBgImageCount(0);

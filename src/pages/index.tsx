@@ -7,7 +7,7 @@ export default function Home() {
 
   const roadMapList = (done: boolean, info: string) => {
     return (
-      <div className="my-0.5 flex min-h-20 items-center border-b border-slate-500 py-0.5">
+      <div className="my-0.5 flex min-h-20 items-center border-b border-slate-500 py-0.5 text-white">
         <div className="ml-4">{done ? <CheckCircle /> : <Circle />}</div>
         <div className="ml-3 text-left">{info}</div>
       </div>
@@ -17,7 +17,7 @@ export default function Home() {
     <main>
       <div className="mx-auto flex select-none flex-col items-center justify-center text-center">
         <div
-          className="pb-1 text-3xl font-bold hover:animate-pulse md:text-4xl"
+          className="pb-1 text-3xl font-bold text-white hover:animate-pulse md:text-4xl"
           onMouseEnter={(e) => {
             e.currentTarget.style.transition = "color 2s ease";
             e.currentTarget.style.background =
@@ -33,7 +33,7 @@ export default function Home() {
         >
           DCL UI Design Studio
         </div>
-        <div className="mt-2 text-xs tracking-tight md:text-sm">
+        <div className="mt-2 text-xs tracking-tight text-white md:text-sm">
           Funded by the
         </div>
         <div className="-mt-2 w-64 md:w-72">
@@ -49,7 +49,7 @@ export default function Home() {
             height={512}
           />
         </div>
-        <div className="-mt-5 w-11/12 text-sm md:-mt-8 md:w-1/2 md:text-base">
+        <div className="-mt-5 w-11/12 text-sm text-white md:-mt-8 md:w-1/2 md:text-base">
           An open sourced web app enabling anyone to design interactive UIs for
           DCL scenes without coding.
           <br />
@@ -57,17 +57,17 @@ export default function Home() {
           accessibility and efficiency for creators.
         </div>
         <div className="mt-8 flex min-h-20 w-11/12 flex-row items-center border-x border-t border-slate-500 bg-gradient-to-tl from-slate-600 to-slate-900 shadow shadow-slate-700 md:w-1/3 ">
-          <div className="mr-2 text-left indent-6 text-lg font-bold">
+          <div className="mr-2 text-left indent-6 text-lg font-bold text-white">
             Roadmap:
           </div>
           <div
-            className={`mx-2 cursor-pointer text-left font-medium ${showReleased ? "underline" : "text-slate-400"}`}
+            className={`mx-2 cursor-pointer text-left font-medium text-white ${showReleased ? "underline" : "text-slate-400"}`}
             onClick={() => setShowReleased(true)}
           >
             Released
           </div>
           <div
-            className={`mx-2 cursor-pointer text-left font-medium ${!showReleased ? "underline" : "text-slate-400"}`}
+            className={`mx-2 cursor-pointer text-left font-medium text-white ${!showReleased ? "underline" : "text-slate-400"}`}
             onClick={() => setShowReleased(false)}
           >
             Upcoming

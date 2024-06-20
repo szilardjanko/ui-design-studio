@@ -26,7 +26,7 @@ export const DeleteModal = ({
         className="relative m-2 rounded-2xl border border-neutral-500 bg-gradient-to-tl from-slate-700 to-slate-900 p-2 shadow shadow-slate-700"
         onClick={handleInnerClick}
       >
-        <div className="m-5">
+        <div className="m-5 text-white">
           <div>Selected UI Element: {div.text}</div>
           <div className="mb-2">Type: {div.uiElementType}</div>
           <div>Are you sure you want to delete this UI Element?</div>

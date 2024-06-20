@@ -22,11 +22,11 @@ export const GridControls = ({
   const [isGridAdd, setIsGridAdd] = useState(true);
   const [isGridSubtract, setIsGridSubtract] = useState(true);
   return (
-    <div className="flex flex-row items-center justify-center select-none">
-      <button className="px-2 py-1" onClick={handleSetShowGrid}>
+    <div className="flex select-none flex-row items-center justify-center">
+      <button className="px-2 py-1 text-white" onClick={handleSetShowGrid}>
         Grid: {gridSize}
       </button>
-      <div className="flex bg-slate-700 rounded-xl px-0.5 py-1 border border-slate-400">
+      <div className="flex rounded-xl border border-slate-400 bg-slate-700 px-0.5 py-1">
         <button
           className="mx-1 cursor-pointer"
           onClick={handleIncreaseGridSize}

@@ -14,7 +14,7 @@ export const TextColorControls = ({
 }: TextColorControlsProps) => {
   return (
     <div className="mx-4 flex h-full flex-col items-start border-x border-slate-500 bg-gradient-to-t from-slate-900 to-slate-800 pt-2">
-      <label htmlFor="text-input" className="w-full text-center">
+      <label htmlFor="text-input" className="w-full text-center text-white">
         Text
       </label>
       <input
@@ -25,7 +25,7 @@ export const TextColorControls = ({
         value={div.text}
         onChange={(e) => onTextChange(e.target.value)}
       />
-      <label htmlFor="bg-color" className="w-full text-center">
+      <label htmlFor="bg-color" className="w-full text-center text-white">
         Background Color
       </label>
       <input

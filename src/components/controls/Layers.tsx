@@ -35,7 +35,7 @@ export const Layers = ({ divs, onSelect, handleSetLock }: LayersProps) => {
           onClick={() => onSelect(index)}
           className="flex cursor-pointer items-center justify-between border border-black hover:border-slate-500"
         >
-          <div className="m-1 max-w-24 overflow-clip whitespace-nowrap text-xs">
+          <div className="m-1 max-w-24 overflow-clip whitespace-nowrap text-xs text-white">
             {div.text === "" ? "Unnamed" : div.text}
           </div>
           <div

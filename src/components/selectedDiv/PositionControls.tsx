@@ -32,10 +32,12 @@ export const PositionControls = ({
 }: PositionControlsProps) => {
   return (
     <div className="mx-4 flex h-full flex-col items-center border-x border-slate-500 bg-gradient-to-t from-slate-900 to-slate-800">
-      <div className="mb-1 w-full border-b border-slate-500 py-2">Position</div>
+      <div className="mb-1 w-full border-b border-slate-500 py-2 text-white">
+        Position
+      </div>
       <div className="flex flex-row px-4">
         <div className="mx-1 flex flex-col">
-          <label htmlFor="positionX" className="text-sm">
+          <label htmlFor="positionX" className="text-sm text-white">
             X
           </label>
           <CustomNumberInput
@@ -51,7 +53,7 @@ export const PositionControls = ({
           />
         </div>
         <div className="mx-1 flex flex-col">
-          <label htmlFor="positionY" className="text-sm">
+          <label htmlFor="positionY" className="text-sm text-white">
             Y
           </label>
           <CustomNumberInput
@@ -69,7 +71,7 @@ export const PositionControls = ({
       </div>
       <div className="mt-4 flex flex-row">
         <div className="mx-1 flex flex-col">
-          <label htmlFor="width" className="text-sm">
+          <label htmlFor="width" className="text-sm text-white">
             Width
           </label>
           <CustomNumberInput
@@ -85,7 +87,7 @@ export const PositionControls = ({
           />
         </div>
         <div className="mx-1 flex flex-col">
-          <label htmlFor="height" className="text-sm">
+          <label htmlFor="height" className="text-sm text-white">
             Height
           </label>
           <CustomNumberInput

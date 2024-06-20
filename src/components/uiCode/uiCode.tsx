@@ -150,7 +150,7 @@ const uiComponent = () => (
             onClick={handleInnerClick}
           >
             <div className="h-[30rem] overflow-y-auto">
-              <div className="mx-6 mt-4 select-text text-left text-sm">
+              <div className="mx-6 mt-4 select-text text-left text-sm text-white">
                 <pre>{codeSnippet}</pre>
               </div>
             </div>

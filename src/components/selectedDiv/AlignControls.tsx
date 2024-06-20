@@ -29,7 +29,7 @@ export const AlignControls = ({
     newPosition: Position,
   ) => (
     <div
-      className="m-2 flex cursor-pointer items-center rounded-xl border border-slate-500 border-opacity-0 px-2 py-0.5 hover:border-opacity-100"
+      className="m-2 flex cursor-pointer items-center rounded-xl border border-slate-500 border-opacity-0 px-2 py-0.5 text-white hover:border-opacity-100"
       onClick={() => setPosition(newPosition)}
     >
       <Icon />
@@ -39,7 +39,9 @@ export const AlignControls = ({
 
   return (
     <div className="mx-4 flex h-full flex-col items-center border-x border-slate-500 bg-gradient-to-t from-slate-900 to-slate-800">
-      <div className="mb-1 w-full border-b border-slate-500 py-2">Align</div>
+      <div className="mb-1 w-full border-b border-slate-500 py-2 text-white">
+        Align
+      </div>
       <div className="flex flex-row">
         <div className="mx-2 pl-2">
           {createAlignButton(AlignTop, "Top", { x: div.position.x, y: 0 })}
