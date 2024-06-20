@@ -43,15 +43,30 @@ const CreateUi = () => {
   const [bgImage, setBgImage] = useState(`url(dclBgDay.png)`);
   const [bgImageCount, setBgImageCount] = useState(0);
 
-  const calculateZoomLevel = (windowHeight: number) => {
-    if (windowHeight >= 1318) return 1.4;
-    if (windowHeight <= 959) return 0.89;
-    return 1 + ((windowHeight - 1080) / 360) * 0.4;
+  const calculateZoomLevel = (windowWidth: number) => {
+    const minWidth = 1366;
+    const maxWidth = 3840;
+    const minZoom = 0.71;
+    const maxZoom = 2.692;
+
+    if (windowWidth === 1920) return 1.162;
+    if (windowWidth === 2560) return 1.675;
+    if (windowWidth <= minWidth) return minZoom;
+    if (windowWidth >= maxWidth) return maxZoom;
+
+    const ratio = (windowWidth - minWidth) / (maxWidth - minWidth);
+    return minZoom + ratio * (maxZoom - minZoom);
+  };
+
+  const handleResetZoomLevel = () => {
+    const initialZoomLevel = calculateZoomLevel(window.innerWidth);
+    setZoomLevel(initialZoomLevel);
   };
 
   useEffect(() => {
-    const initialZoomLevel = calculateZoomLevel(window.innerHeight);
-    setZoomLevel(initialZoomLevel);
+    console.log(window.innerHeight, "height");
+    console.log(window.innerWidth, "width");
+    handleResetZoomLevel();
   }, []);
 
   const handleZoomChange = (event: any) => {
@@ -228,7 +243,7 @@ const CreateUi = () => {
 
   return (
     <div className="flex flex-grow flex-col">
-      <div className="flex flex-row items-start justify-start ">
+      <div className="flex flex-row items-start justify-between">
         <div className="flex select-none flex-col px-2">
           <Button
             text="Components"
@@ -271,7 +286,7 @@ const CreateUi = () => {
             <ZoomControl
               zoomLevel={zoomLevel}
               handleZoomChange={handleZoomChange}
-              setZoomLevel={setZoomLevel}
+              handleResetZoomLevel={handleResetZoomLevel}
             />
           </div>
           <div className="mt-2 border-t pt-2">
@@ -367,33 +382,33 @@ const CreateUi = () => {
             </div>
           </div>
         </div>
-      </div>
-      <div className="flex w-full flex-row items-end justify-between overflow-y-auto text-center">
-        {selectedDivIndex != null ? (
-          <SelectedDivEditor
-            div={divs[selectedDivIndex]}
-            setPosition={(newPosition) =>
-              updatePosition(selectedDivIndex, newPosition)
-            }
-            setSize={(newSize) => updateSize(selectedDivIndex, newSize)}
-            onTextChange={(newText: string) =>
-              updateText(selectedDivIndex, newText)
-            }
-            onBackgroundColorChange={(newBackgroundColor: string) =>
-              updateBackgroundColor(selectedDivIndex, newBackgroundColor)
-            }
-            handleSetLock={(lock: boolean) => {
-              handleSetLock(selectedDivIndex, lock);
-            }}
-            onDelete={handleDelete}
-          />
-        ) : (
-          <div className="my-2 ml-44 flex w-fit select-none flex-col justify-start border-x border-slate-700 bg-slate-800">
-            <div className="flex justify-between border-y border-slate-500 bg-gradient-to-tl from-slate-600 to-slate-900 px-4 py-2 text-white shadow shadow-slate-700">
-              No UI Element Selected
+        <div className="pl-1">
+          {selectedDivIndex != null ? (
+            <SelectedDivEditor
+              div={divs[selectedDivIndex]}
+              setPosition={(newPosition) =>
+                updatePosition(selectedDivIndex, newPosition)
+              }
+              setSize={(newSize) => updateSize(selectedDivIndex, newSize)}
+              onTextChange={(newText: string) =>
+                updateText(selectedDivIndex, newText)
+              }
+              onBackgroundColorChange={(newBackgroundColor: string) =>
+                updateBackgroundColor(selectedDivIndex, newBackgroundColor)
+              }
+              handleSetLock={(lock: boolean) => {
+                handleSetLock(selectedDivIndex, lock);
+              }}
+              onDelete={handleDelete}
+            />
+          ) : (
+            <div className="flex w-72 select-none flex-col justify-start border-x border-slate-700 bg-slate-800">
+              <div className="flex justify-between border-y border-slate-500 bg-gradient-to-tl from-slate-600 to-slate-900 px-4 py-2 text-white shadow shadow-slate-700">
+                <div className="w-full text-center">No UI Element Selected</div>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

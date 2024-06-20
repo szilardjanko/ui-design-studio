@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 type CustomNumberInputProps = {
   id: string;
@@ -13,6 +13,8 @@ export const CustomNumberInput = ({
   onChange,
   onBlur,
 }: CustomNumberInputProps) => {
+  const [isFocused, setIsFocused] = useState(false);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value.replace(/[^0-9.-]/g, "");
     if (/^-?\d*\.?\d*$/.test(newValue)) {
@@ -21,6 +23,9 @@ export const CustomNumberInput = ({
   };
 
   const formatValue = (value: string, id: string) => {
+    if (isFocused) {
+      return value;
+    }
     if (id === "positionX" || id === "positionY") {
       return `${value} %`;
     } else if (id === "width" || id === "height") {
@@ -34,10 +39,14 @@ export const CustomNumberInput = ({
       id={id}
       name={id}
       type="text"
-      className="w-28 rounded-xl border border-slate-500 bg-slate-700 text-center text-white hover:border-slate-400"
+      className="w-24 rounded-xl border border-slate-500 bg-slate-700 text-center text-white hover:border-slate-400"
       value={formatValue(value, id)}
       onChange={handleInputChange}
-      onBlur={onBlur}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => {
+        setIsFocused(false);
+        onBlur();
+      }}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
           onBlur();

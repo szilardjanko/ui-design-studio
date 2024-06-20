@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import {
   AlignBottom,
   AlignCenter,
@@ -38,8 +38,8 @@ export const AlignControls = ({
   );
 
   return (
-    <div className="mx-4 flex h-full flex-col items-center border-x border-slate-500 bg-gradient-to-t from-slate-900 to-slate-800">
-      <div className="mb-1 w-full border-b border-slate-500 py-2 text-white">
+    <div className="flex w-full flex-col items-center bg-gradient-to-t from-slate-900 to-slate-800">
+      <div className="mb-1 w-full border-b border-slate-500 py-2 text-center text-white">
         Align
       </div>
       <div className="flex flex-row">

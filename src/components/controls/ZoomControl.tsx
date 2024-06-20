@@ -3,13 +3,13 @@ import React from "react";
 type ZoomControlProps = {
   zoomLevel: number;
   handleZoomChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  setZoomLevel: (zoomLevel: number) => void;
+  handleResetZoomLevel: () => void;
 };
 
 export const ZoomControl = ({
   zoomLevel,
   handleZoomChange,
-  setZoomLevel,
+  handleResetZoomLevel,
 }: ZoomControlProps) => {
   return (
     <div className="w-40 py-1 text-center">
@@ -21,7 +21,7 @@ export const ZoomControl = ({
         name="zoom-control"
         type="range"
         min="0.5"
-        max="1.5"
+        max="3"
         step="0.01"
         value={zoomLevel}
         onChange={handleZoomChange}
@@ -29,7 +29,7 @@ export const ZoomControl = ({
       />
       <div
         className="-mt-1 cursor-pointer text-xs text-white"
-        onClick={() => setZoomLevel(1)}
+        onClick={() => handleResetZoomLevel()}
       >
         Reset
       </div>

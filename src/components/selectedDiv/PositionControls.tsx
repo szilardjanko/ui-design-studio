@@ -31,8 +31,8 @@ export const PositionControls = ({
   setHeight,
 }: PositionControlsProps) => {
   return (
-    <div className="mx-4 flex h-full flex-col items-center border-x border-slate-500 bg-gradient-to-t from-slate-900 to-slate-800">
-      <div className="mb-1 w-full border-b border-slate-500 py-2 text-white">
+    <div className="flex w-full flex-col items-center border-b border-slate-500 bg-gradient-to-t from-slate-900 to-slate-800 pb-3 pt-2 text-center">
+      <div className="mb-1 w-full border-b border-slate-500 pb-2 text-white">
         Position
       </div>
       <div className="flex flex-row px-4">
