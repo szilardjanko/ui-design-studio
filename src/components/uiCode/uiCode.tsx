@@ -6,9 +6,9 @@ type uiCodeProps = {
   divs: Div[];
 };
 
-export const UiCode: React.FC<uiCodeProps> = ({ divs }) => {
+export const UiCode = ({ divs }: uiCodeProps) => {
   const [openUiCode, setOpenUiCode] = useState(false);
-  const [copyCodeText, setCopyCodeText] = useState("Copy Code");
+  const [showCopyCode, setShowCopyCody] = useState(true);
 
   if (!divs) return null;
   if (divs.length === 0) return null;
@@ -19,6 +19,13 @@ export const UiCode: React.FC<uiCodeProps> = ({ divs }) => {
   const handleUiElementType = (uiElementType: string, div: Div) => {
     const widthPercent = (div.size.width / screenWidth) * 100;
     const heightPercent = (div.size.height / screenHeight) * 100;
+    const positionXleft = (div.position.x * screenWidth) / 100;
+    const positionXright =
+      ((100 - (div.position.x + widthPercent)) * screenWidth) / 100;
+    const positionYtop = (div.position.y * screenHeight) / 100;
+    const positionYbottom =
+      ((100 - (div.position.y + heightPercent)) * screenHeight) / 100;
+
     switch (uiElementType) {
       case "label":
         return `    <Label
@@ -28,11 +35,11 @@ export const UiCode: React.FC<uiCodeProps> = ({ divs }) => {
           uiTransform={{ 
             positionType: 'absolute',
             position: {
-              ${div.position.x + widthPercent / 2 < 50 ? "left" : "right"}: '${div.position.x + widthPercent / 2 < 50 ? div.position.x.toFixed(2) : (100 - (div.position.x + widthPercent)).toFixed(2)}%',
-              ${div.position.y + heightPercent / 2 < 50 ? "top" : "bottom"}: '${div.position.y + heightPercent / 2 < 50 ? div.position.y.toFixed(2) : (100 - (div.position.y + heightPercent)).toFixed(2)}%',
+              right: '${positionXright.toFixed(2)}px',
+              bottom: '${positionYbottom.toFixed(2)}px',
             },
-            width: "${widthPercent.toFixed(2)}%",
-            height: "${heightPercent.toFixed(2)}%"
+            width: "${div.size.width.toFixed(2)}px",
+            height: "${div.size.height.toFixed(2)}px"
           }}
           uiBackground={{ color: Color4.fromHexString('${div.backgroundColor}') }}
       />\n  `;
@@ -45,11 +52,11 @@ export const UiCode: React.FC<uiCodeProps> = ({ divs }) => {
           uiTransform={{ 
             positionType: 'absolute',
             position: {
-              ${div.position.x + widthPercent / 2 < 50 ? "left" : "right"}: '${div.position.x + widthPercent / 2 < 50 ? div.position.x.toFixed(2) : (100 - (div.position.x + widthPercent)).toFixed(2)}%',
-              ${div.position.y + heightPercent / 2 < 50 ? "top" : "bottom"}: '${div.position.y + heightPercent / 2 < 50 ? div.position.y.toFixed(2) : (100 - (div.position.y + heightPercent)).toFixed(2)}%',
+              right: '${positionXright.toFixed(2)}px',
+              bottom: '${positionYbottom.toFixed(2)}px',
             },
-            width: "${widthPercent.toFixed(2)}%",
-            height: "${heightPercent.toFixed(2)}%"
+            width: "${div.size.width.toFixed(2)}px",
+            height: "${div.size.height.toFixed(2)}px"
           }}
           uiBackground={{ color: Color4.fromHexString('${div.backgroundColor}') }}
           onMouseDown={() => {
@@ -65,11 +72,11 @@ export const UiCode: React.FC<uiCodeProps> = ({ divs }) => {
           uiTransform={{ 
             positionType: 'absolute',
             position: {
-              ${div.position.x + widthPercent / 2 < 50 ? "left" : "right"}: '${div.position.x + widthPercent / 2 < 50 ? div.position.x.toFixed(2) : (100 - (div.position.x + widthPercent)).toFixed(2)}%',
-              ${div.position.y + heightPercent / 2 < 50 ? "top" : "bottom"}: '${div.position.y + heightPercent / 2 < 50 ? div.position.y.toFixed(2) : (100 - (div.position.y + heightPercent)).toFixed(2)}%',
+              right: '${positionXright.toFixed(2)}px',
+              bottom: '${positionYbottom.toFixed(2)}px',
             },
-            width: "${widthPercent.toFixed(2)}%",
-            height: "${heightPercent.toFixed(2)}%"
+            width: "${div.size.width.toFixed(2)}px",
+            height: "${div.size.height.toFixed(2)}px"
           }}
           uiBackground={{ color: Color4.fromHexString('${div.backgroundColor}') }}
           onSubmit={(value) => {
@@ -117,7 +124,7 @@ const uiComponent = () => (
             right: '0.00%',
             top: '0.00%'
           },
-          width: '75%',
+          width: '100%',
           height: '100%'
       }}
   >
@@ -126,32 +133,44 @@ const uiComponent = () => (
 )
 `;
 
+  const handleInnerClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+  };
+
   return (
     <div>
       <Button text={"Open Ui Code"} onClick={() => setOpenUiCode(true)} />
       {openUiCode && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-75">
-          <div className="flex flex-col items-center rounded-lg border border-slate-400 bg-black p-2">
+        <div
+          className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-75"
+          onClick={() => setOpenUiCode(false)}
+        >
+          <div
+            className="flex flex-col items-center rounded-lg border border-slate-400 bg-black p-2"
+            onClick={handleInnerClick}
+          >
             <div className="h-[30rem] overflow-y-auto">
               <div className="mx-6 mt-4 select-text text-left text-sm">
                 <pre>{codeSnippet}</pre>
               </div>
             </div>
-            <div className="mt-2 flex flex-col items-center">
+            <div className="mt-2 flex w-full flex-row items-center justify-center border-t border-slate-400 pt-2">
               <Button
-                className="w-40 text-center"
-                text={copyCodeText}
+                className="mx-2 my-1 w-40 rounded-xl text-center"
+                text={showCopyCode ? "Copy Code" : "Copied!"}
+                variant="selected"
                 onClick={() => {
                   navigator.clipboard.writeText(codeSnippet);
-                  setCopyCodeText("Code Copied");
+                  setShowCopyCody(false);
                   setTimeout(() => {
-                    setCopyCodeText("Copy Code");
+                    setShowCopyCody(true);
                   }, 2000);
                 }}
               />
               <Button
-                className="w-40 text-center"
+                className="mx-2 my-1 w-40 rounded-xl text-center"
                 text={"Close"}
+                variant="remove"
                 onClick={() => setOpenUiCode(false)}
               />
             </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "../Button";
 
-const Social = () => {
+export const Social = () => {
   return (
     <div className="mt-2 flex flex-col border-t border-slate-300 pt-2">
       <Button
@@ -35,5 +35,3 @@ const Social = () => {
     </div>
   );
 };
-
-export default Social;

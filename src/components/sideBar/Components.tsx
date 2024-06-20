@@ -1,9 +1,11 @@
 import React from "react";
 import Button from "../Button";
 
-type AddDivFunction = (uiElementType: "label" | "button" | "input") => void;
+type ComponentsProps = {
+  addDiv: (uiElementType: "label" | "button" | "input") => void;
+};
 
-const Components: React.FC<{ addDiv: AddDivFunction }> = ({ addDiv }) => {
+export const Components = ({ addDiv }: ComponentsProps) => {
   return (
     <div className="mt-2 flex flex-col border-t border-slate-300 pt-2">
       <Button
@@ -30,5 +32,3 @@ const Components: React.FC<{ addDiv: AddDivFunction }> = ({ addDiv }) => {
     </div>
   );
 };
-
-export default Components;

@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "../Button";
 
-const Preset = () => {
+export const Preset = () => {
   return (
     <div className="mt-2 flex flex-col border-t border-slate-300 pt-2">
       <Button
@@ -28,5 +28,3 @@ const Preset = () => {
     </div>
   );
 };
-
-export default Preset;
