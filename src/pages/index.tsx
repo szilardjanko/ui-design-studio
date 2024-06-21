@@ -56,7 +56,7 @@ export default function Home() {
           This drag-and-drop platform simplifies UI creation, enhancing
           accessibility and efficiency for creators.
         </div>
-        <div className="mt-8 flex min-h-20 w-11/12 flex-row items-center border-x border-t border-slate-500 bg-gradient-to-tl from-slate-600 to-slate-900 shadow shadow-slate-700 md:w-1/3 ">
+        <div className="mt-8 flex min-h-20 w-11/12 flex-row items-center border-x border-t border-slate-500 bg-gradient-to-tl from-slate-600 to-slate-900 shadow shadow-slate-700 md:w-1/2">
           <div className="mr-2 text-left indent-6 text-lg font-bold text-white">
             Roadmap:
           </div>
@@ -73,7 +73,7 @@ export default function Home() {
             Upcoming
           </div>
         </div>
-        <div className="mb-4 flex h-80 w-11/12 flex-col overflow-auto border-x border-b border-slate-500 md:w-1/3">
+        <div className="mb-4 flex h-80 w-11/12 flex-col overflow-auto border-x border-b border-slate-500 md:w-1/2">
           {showReleased && (
             <>
               {roadMapList(
