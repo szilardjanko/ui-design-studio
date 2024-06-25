@@ -1,5 +1,6 @@
 import { CheckCircle, Circle } from "@/components/icons/CheckCircle";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function Home() {
@@ -49,13 +50,21 @@ export default function Home() {
             height={512}
           />
         </div>
-        <div className="-mt-5 w-11/12 text-sm text-white md:-mt-8 md:w-1/2 md:text-base">
+        <div className="-mt-5 mb-8 w-11/12 text-sm text-white md:-mt-8 md:w-1/2 md:text-base">
           An open sourced web app enabling anyone to design interactive UIs for
           DCL scenes without coding.
           <br />
           This drag-and-drop platform simplifies UI creation, enhancing
           accessibility and efficiency for creators.
         </div>
+
+        <Link
+          href={"/CreateUi"}
+          className="rounded-xl border border-slate-200 bg-slate-800 px-4 pb-3 pt-2 text-3xl font-bold hover:bg-slate-700 md:text-4xl"
+        >
+          Create UI
+        </Link>
+
         <div className="mt-8 flex min-h-20 w-11/12 flex-row items-center border-x border-t border-slate-500 bg-gradient-to-tl from-slate-600 to-slate-900 shadow shadow-slate-700 md:w-1/2">
           <div className="mr-2 text-left indent-6 text-lg font-bold text-white">
             Roadmap:
