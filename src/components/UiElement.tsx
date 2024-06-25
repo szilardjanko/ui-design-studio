@@ -188,7 +188,6 @@ export const UiElement = ({
       onMouseDown={dragMouseDown}
       onMouseEnter={() => {
         setIsMouseEnter(true);
-        !lock && onSelect();
       }}
       onMouseLeave={() => setIsMouseEnter(false)}
       onClick={() => onSelect()}
