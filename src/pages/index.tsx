@@ -60,7 +60,7 @@ export default function Home() {
 
         <Link
           href={"/CreateUi"}
-          className="rounded-xl border border-slate-200 bg-slate-800 px-4 pb-3 pt-2 text-3xl font-bold hover:bg-slate-700 md:text-4xl"
+          className="rounded-xl border border-slate-200 bg-slate-800 px-4 pb-3 pt-2 text-3xl font-bold text-white hover:bg-slate-700 md:text-4xl"
         >
           Create UI
         </Link>
@@ -70,13 +70,13 @@ export default function Home() {
             Roadmap:
           </div>
           <div
-            className={`mx-2 cursor-pointer text-left font-medium text-white ${showReleased ? "underline" : "text-slate-400"}`}
+            className={`mx-2 text-left font-medium hover:text-slate-100 ${showReleased ? "text-white underline" : "cursor-pointer text-slate-400"}`}
             onClick={() => setShowReleased(true)}
           >
             Released
           </div>
           <div
-            className={`mx-2 cursor-pointer text-left font-medium text-white ${!showReleased ? "underline" : "text-slate-400"}`}
+            className={`mx-2 text-left font-medium hover:text-slate-100 ${!showReleased ? "text-white underline" : "cursor-pointer text-slate-400"}`}
             onClick={() => setShowReleased(false)}
           >
             Upcoming
