@@ -11,6 +11,7 @@ import { UiCode } from "@/components/uiCode/uiCode";
 import { BgImageControl } from "@/components/controls/BgImageControl";
 import { Layers } from "@/components/controls/Layers";
 import Button from "@/components/Button";
+import { BlockIcon } from "@/components/icons/Block";
 
 export type Div = {
   uiElementType: "label" | "button" | "input";
@@ -64,8 +65,6 @@ const CreateUi = () => {
   };
 
   useEffect(() => {
-    console.log(window.innerHeight, "height");
-    console.log(window.innerWidth, "width");
     handleResetZoomLevel();
   }, []);
 
@@ -402,13 +401,23 @@ const CreateUi = () => {
               onDelete={handleDelete}
             />
           ) : (
-            <div className="flex w-72 select-none flex-col justify-start border-x border-slate-700 bg-slate-800">
-              <div className="flex justify-between border-y border-slate-500 bg-gradient-to-tl from-slate-600 to-slate-900 px-4 py-2 text-white shadow shadow-slate-700">
+            <div className="flex select-none flex-col justify-start border-x border-slate-700 bg-slate-800 text-sm md:w-72 md:text-base">
+              <div className="flex justify-between border-y border-slate-500 bg-gradient-to-tl from-slate-600 to-slate-900 px-1 py-2 text-white shadow shadow-slate-700 md:px-4">
                 <div className="w-full text-center">No UI Element Selected</div>
               </div>
             </div>
           )}
         </div>
+      </div>
+      <div className="absolute top-10 flex h-full flex-col items-center bg-slate-900 px-10 pt-20 text-center sm:hidden">
+        <BlockIcon />
+        <div className="mt-4">
+          The Create UI Tool is not supported on touchscreen devices or narrow
+          browser windows. Please access it on a desktop or laptop browser with
+          a wider screen for the best experience.
+        </div>
+        <div className="mt-4">Minimum Requirements</div>
+        <div>Screen width: 640px</div>
       </div>
     </div>
   );
