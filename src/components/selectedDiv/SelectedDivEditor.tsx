@@ -1,4 +1,4 @@
-import { Div } from "@/pages/CreateUi";
+import { Div, PositionTypes } from "@/pages/CreateUi";
 import { Position, Size } from "../UiElement";
 import { useEffect, useState } from "react";
 import { TextColorControls } from "./TextColorControls";
@@ -7,35 +7,64 @@ import { AlignControls } from "./AlignControls";
 import { DivInfo } from "./DivInfo";
 import { DeleteModal } from "./DeleteModal";
 import { Delete } from "../icons/Delete";
+import {
+  ButtonIcon,
+  ContainerIcon,
+  InputIcon,
+  LabelIcon,
+} from "../icons/UiElementIcons";
+import { AddDivs } from "./AddDivs";
+import { ContainerProperties } from "./ContainerProperties";
+import { PaddingMarginControls } from "./PaddingMarginControls";
 
 type SelectedDivEditorProps = {
   div: Div;
-  setPosition: React.Dispatch<React.SetStateAction<Position>>;
-  setSize: React.Dispatch<React.SetStateAction<Size>>;
+  divs: Div[];
+  setDivs: React.Dispatch<React.SetStateAction<Div[]>>;
+  onPositionChange: (newPosition: Position) => void;
+  onSizeChange: (newSize: Size) => void;
   onTextChange: (newText: string) => void;
   onBackgroundColorChange: (newBackgroundColor: string) => void;
+  onTextColorChange: (newTextColor: string) => void;
+  onMarginChange: (newMargin: PositionTypes) => void;
+  onPaddingChange: (newPadding: PositionTypes) => void;
   onDelete: () => void;
   handleSetLock: (lock: boolean) => void;
+  setSelected: React.Dispatch<React.SetStateAction<Div | null>>;
 };
 
 export const SelectedDivEditor = ({
   div,
-  setPosition,
-  setSize,
+  divs,
+  setDivs,
+  onPositionChange,
+  onSizeChange,
   onTextChange,
   onBackgroundColorChange,
+  onTextColorChange,
   onDelete,
   handleSetLock,
+  onMarginChange,
+  onPaddingChange,
+  setSelected,
 }: SelectedDivEditorProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [positionX, setPositionX] = useState(
-    div ? div.position.x.toFixed(2) : "0",
-  );
-  const [positionY, setPositionY] = useState(
-    div ? div.position.y.toFixed(2) : "0",
-  );
-  const [width, setWidth] = useState(div ? div.size.width.toFixed(2) : "0");
-  const [height, setHeight] = useState(div ? div.size.height.toFixed(2) : "0");
+  const [positionX, setPositionX] = useState("0");
+  const [positionY, setPositionY] = useState("0");
+  const [width, setWidth] = useState("0");
+  const [height, setHeight] = useState("0");
+  const [margin, setMargin] = useState({
+    top: "0",
+    right: "0",
+    bottom: "0",
+    left: "0",
+  });
+  const [padding, setPadding] = useState({
+    top: "0",
+    right: "0",
+    bottom: "0",
+    left: "0",
+  });
 
   const screenWidth = 1248;
   const screenHeight = 702;
@@ -59,10 +88,19 @@ export const SelectedDivEditor = ({
       <div className="flex w-full items-center justify-between border-b border-slate-500 bg-gradient-to-tl from-slate-600 to-slate-900 py-2 shadow shadow-slate-700">
         <div className="flex flex-col px-4">
           <div className="text-white">Selected UI Element:</div>
-          <div>
-            {div.text === ""
-              ? "Unnamed - " + div.uiElementType
-              : div.text + " - " + div.uiElementType}
+          <div className="flex items-center">
+            <div className="mr-2">
+              {div.uiElementType === "label" ? (
+                <LabelIcon />
+              ) : div.uiElementType === "button" ? (
+                <ButtonIcon />
+              ) : div.uiElementType === "input" ? (
+                <InputIcon />
+              ) : div.uiElementType === "container" ? (
+                <ContainerIcon />
+              ) : null}
+            </div>
+            {div.name}
           </div>
         </div>
         <div
@@ -77,11 +115,12 @@ export const SelectedDivEditor = ({
         div={div}
         onTextChange={onTextChange}
         onBackgroundColorChange={onBackgroundColorChange}
+        onTextColorChange={onTextColorChange}
       />
       <PositionControls
         div={div}
-        setPosition={setPosition}
-        setSize={setSize}
+        onPositionChange={onPositionChange}
+        onSizeChange={onSizeChange}
         setHeight={setHeight}
         setWidth={setWidth}
         setPositionX={setPositionX}
@@ -93,10 +132,30 @@ export const SelectedDivEditor = ({
       />
       <AlignControls
         div={div}
-        setPosition={setPosition}
+        onPositionChange={onPositionChange}
         screenWidth={screenWidth}
         screenHeight={screenHeight}
       />
+      {div.uiElementType === "container" && (
+        <>
+          <AddDivs
+            containerDiv={div}
+            setSelected={setSelected}
+            divs={divs}
+            setDivs={setDivs}
+          />
+          <ContainerProperties div={div} divs={divs} setDivs={setDivs} />
+          <PaddingMarginControls
+            div={div}
+            onMarginChange={onMarginChange}
+            onPaddingChange={onPaddingChange}
+            margin={margin}
+            setMargin={setMargin}
+            padding={padding}
+            setPadding={setPadding}
+          />
+        </>
+      )}
       {showDeleteModal && (
         <DeleteModal
           div={div}

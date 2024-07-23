@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { CustomNumberInput } from "./CustomNumberInput";
 import { Div } from "@/pages/CreateUi";
 import { Position, Size } from "../UiElement";
 
 type PositionControlsProps = {
   div: Div;
-  setPosition: React.Dispatch<React.SetStateAction<Position>>;
-  setSize: React.Dispatch<React.SetStateAction<Size>>;
+  onPositionChange: (
+    newPosition: Position,
+    isContainer: boolean,
+    isContainerDiv: boolean,
+    containerIndex?: number,
+  ) => void;
+  onSizeChange: (newSize: Size) => void;
   positionX: string;
   setPositionX: React.Dispatch<React.SetStateAction<string>>;
   positionY: string;
@@ -19,8 +24,8 @@ type PositionControlsProps = {
 
 export const PositionControls = ({
   div,
-  setPosition,
-  setSize,
+  onPositionChange,
+  onSizeChange,
   positionX,
   setPositionX,
   positionY,
@@ -30,77 +35,97 @@ export const PositionControls = ({
   height,
   setHeight,
 }: PositionControlsProps) => {
+  const [hidden, setHidden] = useState(true);
+
   return (
-    <div className="flex w-full flex-col items-center border-b border-slate-500 bg-gradient-to-t from-slate-900 to-slate-800 pb-3 pt-2 text-center">
-      <div className="mb-1 w-full border-b border-slate-500 pb-2 text-white">
-        Position
+    <div
+      className={`flex w-full flex-col items-center bg-gradient-to-t from-slate-900 to-slate-800 text-center`}
+    >
+      <div
+        className="mb-1 w-full cursor-pointer border-b border-slate-500 py-2 text-white"
+        onClick={() => setHidden(!hidden)}
+      >
+        Position - Size
       </div>
-      <div className="flex flex-row px-4">
-        <div className="mx-1 flex flex-col">
-          <label htmlFor="positionX" className="text-sm text-white">
-            X
-          </label>
-          <CustomNumberInput
-            id="positionX"
-            value={positionX}
-            onChange={setPositionX}
-            onBlur={() =>
-              setPosition({
-                x: Number(positionX),
-                y: div.position.y,
-              })
-            }
-          />
+      <div
+        className={`overflow-hidden transition-all duration-700 ${hidden ? "max-h-0" : "max-h-96"
+          }`}
+      >
+        <div className="flex flex-row px-4">
+          <div className="mx-1 flex flex-col">
+            <label htmlFor="positionX" className="text-sm text-white">
+              X
+            </label>
+            <CustomNumberInput
+              id="positionX"
+              value={positionX}
+              onChange={setPositionX}
+              onBlur={() =>
+                onPositionChange(
+                  {
+                    x: Number(positionX),
+                    y: div.position.y,
+                  },
+                  div.uiElementType === "container",
+                  div.containerName === "" ? false : true,
+                )
+              }
+            />
+          </div>
+          <div className="mx-1 flex flex-col">
+            <label htmlFor="positionY" className="text-sm text-white">
+              Y
+            </label>
+            <CustomNumberInput
+              id="positionY"
+              value={positionY}
+              onChange={setPositionY}
+              onBlur={() =>
+                onPositionChange(
+                  {
+                    x: div.position.x,
+                    y: Number(positionY),
+                  },
+                  div.uiElementType === "container",
+                  div.containerName === "" ? false : true,
+                )
+              }
+            />
+          </div>
         </div>
-        <div className="mx-1 flex flex-col">
-          <label htmlFor="positionY" className="text-sm text-white">
-            Y
-          </label>
-          <CustomNumberInput
-            id="positionY"
-            value={positionY}
-            onChange={setPositionY}
-            onBlur={() =>
-              setPosition({
-                x: div.position.x,
-                y: Number(positionY),
-              })
-            }
-          />
-        </div>
-      </div>
-      <div className="mt-4 flex flex-row">
-        <div className="mx-1 flex flex-col">
-          <label htmlFor="width" className="text-sm text-white">
-            Width
-          </label>
-          <CustomNumberInput
-            id="width"
-            value={width}
-            onChange={setWidth}
-            onBlur={() =>
-              setSize({
-                width: Number(width),
-                height: div.size.height,
-              })
-            }
-          />
-        </div>
-        <div className="mx-1 flex flex-col">
-          <label htmlFor="height" className="text-sm text-white">
-            Height
-          </label>
-          <CustomNumberInput
-            id="height"
-            value={height}
-            onChange={setHeight}
-            onBlur={() =>
-              setSize({
-                width: div.size.width,
-                height: Number(height),
-              })
-            }
-          />
+        <div className="flex flex-row p-4">
+          <div className="mx-1 flex flex-col">
+            <label htmlFor="width" className="text-sm text-white">
+              Width
+            </label>
+            <CustomNumberInput
+              id="width"
+              value={width}
+              onChange={setWidth}
+              onBlur={() =>
+                onSizeChange({
+                  width: Number(width),
+                  height: div.size.height,
+                })
+              }
+            />
+          </div>
+          <div className="mx-1 flex flex-col">
+            <label htmlFor="height" className="text-sm text-white">
+              Height
+            </label>
+            <CustomNumberInput
+              id="height"
+              value={height}
+              onChange={setHeight}
+              onBlur={() =>
+                onSizeChange({
+                  width: div.size.width,
+                  height: Number(height),
+                })
+              }
+            />
+          </div>
         </div>
       </div>
     </div>

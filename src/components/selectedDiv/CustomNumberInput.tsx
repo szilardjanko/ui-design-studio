@@ -28,10 +28,28 @@ export const CustomNumberInput = ({
     }
     if (id === "positionX" || id === "positionY") {
       return `${value} %`;
-    } else if (id === "width" || id === "height") {
+    } else if (
+      id === "width" ||
+      id === "height" ||
+      id === "marginTop" ||
+      id === "marginRight" ||
+      id === "marginBottom" ||
+      id === "marginLeft" ||
+      id === "paddingTop" ||
+      id === "paddingRight" ||
+      id === "paddingBottom" ||
+      id === "paddingLeft"
+    ) {
       return `${value} px`;
     }
     return value;
+  };
+
+  const handleBlur = () => {
+    if (value === "") {
+      onChange("0");
+    }
+    onBlur();
   };
 
   return (
@@ -45,11 +63,11 @@ export const CustomNumberInput = ({
       onFocus={() => setIsFocused(true)}
       onBlur={() => {
         setIsFocused(false);
-        onBlur();
+        handleBlur();
       }}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
-          onBlur();
+          handleBlur();
         }
       }}
     />

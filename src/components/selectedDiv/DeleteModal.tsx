@@ -3,7 +3,7 @@ import React from "react";
 import Button from "../Button";
 
 type DeleteModalProps = {
-  div: Div;
+  div: Div | null;
   setShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
   onDelete: () => void;
 };
@@ -13,6 +13,8 @@ export const DeleteModal = ({
   setShowDeleteModal,
   onDelete,
 }: DeleteModalProps) => {
+  if (!div) return null;
+
   const handleInnerClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
@@ -27,9 +29,11 @@ export const DeleteModal = ({
         onClick={handleInnerClick}
       >
         <div className="m-5 text-center text-white">
-          <div>Selected UI Element: {div.text}</div>
-          <div className="mb-2">Type: {div.uiElementType}</div>
-          <div>Are you sure you want to delete this UI Element?</div>
+          <div>Selected UI Element: {div.name}</div>
+          <div>Type: {div.uiElementType}</div>
+          <div className="mt-2">
+            Are you sure you want to delete this UI Element?
+          </div>
         </div>
       </div>
       <div className="flex justify-center">

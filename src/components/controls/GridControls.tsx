@@ -24,7 +24,7 @@ export const GridControls = ({
   return (
     <div className="flex select-none flex-row items-center justify-center">
       <button className="px-2 py-1 text-white" onClick={handleSetShowGrid}>
-        Grid: {gridSize}
+        Grid: {gridSize < 20 && gridSize}
       </button>
       <div className="flex rounded-xl border border-slate-400 bg-slate-700 px-0.5 py-1">
         <button

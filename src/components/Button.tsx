@@ -4,21 +4,24 @@ import { useTheme } from "@/context/ThemeContext";
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: React.ReactNode;
   padding?: "small" | "medium" | "large" | "squareMedium" | "custom";
-  variant?: "neutral" | "accept" | "submit" | "remove" | "selected";
+  variant?: "neutral" | "accept" | "submit" | "remove" | "selected" | "copy";
   textAlign?: "left" | "center" | "right";
+  icon?: React.ReactNode;
 }
 
 const getVariantClasses = (variant: string, theme: string) => {
   if (theme === "dark") {
     switch (variant) {
       case "neutral":
-        return "border border-black hover:bg-gradient-to-tl hover:from-slate-700 hover:to-slate-900 hover:border-slate-400 text-white";
+        return "flex items-center border border-black hover:bg-gradient-to-tl hover:from-slate-700 hover:to-slate-900 hover:border-slate-400 text-white";
       case "selected":
+        return "flex items-center border border-slate-500 bg-gradient-to-tl from-slate-700 to-slate-900 hover:border-slate-400 text-white";
+      case "copy":
         return "border border-slate-500 bg-gradient-to-tl from-slate-700 to-slate-900 hover:border-slate-400 text-white";
       case "remove":
         return "border border-rose-500 bg-gradient-to-tl from-rose-700 to-rose-900 hover:border-rose-400 hover:from-rose-600 hover:to-rose-800 text-white";
       default:
-        return "border border-black hover:bg-gradient-to-tl hover:from-slate-700 hover:to-slate-900 hover:border-slate-400 text-white";
+        return "flex items-center border border-black hover:bg-gradient-to-tl hover:from-slate-700 hover:to-slate-900 hover:border-slate-400 text-white";
     }
   } else {
     switch (variant) {
@@ -61,6 +64,7 @@ const Button: React.FC<ButtonProps> = ({
   padding = "medium",
   variant = "neutral",
   textAlign = "center",
+  icon,
   className = "",
   ...rest
 }) => {
@@ -74,6 +78,7 @@ const Button: React.FC<ButtonProps> = ({
 
   return (
     <button className={combinedClasses} {...rest}>
+      {icon && <span className="mr-2">{icon}</span>}
       {text}
     </button>
   );

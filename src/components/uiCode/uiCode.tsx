@@ -2,131 +2,159 @@ import { Div } from "@/pages/CreateUi";
 import React, { useState } from "react";
 import Button from "../Button";
 
-type uiCodeProps = {
+type UiCodeProps = {
   divs: Div[];
 };
 
-export const UiCode = ({ divs }: uiCodeProps) => {
+export const UiCode = ({ divs }: UiCodeProps) => {
   const [openUiCode, setOpenUiCode] = useState(false);
-  const [showCopyCode, setShowCopyCody] = useState(true);
-
-  if (!divs) return null;
-  if (divs.length === 0) return null;
+  const [copyCodeText, setCopyCodeText] = useState("Copy Code");
 
   const screenWidth = 1248;
   const screenHeight = 702;
 
-  const handleUiElementType = (uiElementType: string, div: Div) => {
-    const widthPercent = (div.size.width / screenWidth) * 100;
-    const heightPercent = (div.size.height / screenHeight) * 100;
-    const positionXleft = (div.position.x * screenWidth) / 100;
-    const positionXright =
-      ((100 - (div.position.x + widthPercent)) * screenWidth) / 100;
-    const positionYtop = (div.position.y * screenHeight) / 100;
-    const positionYbottom =
-      ((100 - (div.position.y + heightPercent)) * screenHeight) / 100;
+  const widthPercent = (div: Div) => (div.size.width / screenWidth) * 100;
+  const heightPercent = (div: Div) => (div.size.height / screenHeight) * 100;
+  const positionXleft = (div: Div) => (div.position.x * screenWidth) / 100;
+  const positionXright = (div: Div) =>
+    ((100 - (div.position.x + widthPercent(div))) * screenWidth) / 100;
+  const positionYtop = (div: Div) => (div.position.y * screenHeight) / 100;
+  const positionYbottom = (div: Div) =>
+    ((100 - (div.position.y + heightPercent(div))) * screenHeight) / 100;
 
-    switch (uiElementType) {
+  const createUiTransform = (div: Div) => {
+    const posX = div.containerName
+      ? div.position.x
+      : div.position.x + widthPercent(div) / 2 < 50
+        ? positionXleft(div)
+        : positionXright(div);
+    const posY = div.containerName
+      ? div.position.y
+      : div.position.y + heightPercent(div) / 2 < 50
+        ? positionYtop(div)
+        : positionYbottom(div);
+
+    return `
+        positionType: '${div.positionType}',
+        position: {
+          ${div.position.x + widthPercent(div) / 2 < 50 ? "left" : "right"}: '${posX.toFixed(2)}px',
+          ${div.position.y + heightPercent(div) / 2 < 50 ? "top" : "bottom"}: '${posY.toFixed(2)}px',
+        },
+        width: '${div.size.width.toFixed(2)}px',
+        height: '${div.size.height.toFixed(2)}px'
+      `;
+  };
+
+  const createUiElement = (div: Div): string => {
+    const uiTransform = createUiTransform(div);
+    const backgroundColor = `Color4.fromHexString('${div.backgroundColor}')`;
+    const textColor = `Color4.fromHexString('${div.textColor}')`;
+
+    switch (div.uiElementType) {
       case "label":
-        return `    <Label
-          value="${div.text}"
-          fontSize={18}
-          color={Color4.fromHexString('#000000')}
-          uiTransform={{ 
-            positionType: 'absolute',
-            position: {
-              right: '${positionXright.toFixed(2)}px',
-              bottom: '${positionYbottom.toFixed(2)}px',
-            },
-            width: "${div.size.width.toFixed(2)}px",
-            height: "${div.size.height.toFixed(2)}px"
-          }}
-          uiBackground={{ color: Color4.fromHexString('${div.backgroundColor}') }}
-      />\n  `;
+        return `
+    <Label
+      value="${div.text}"
+      fontSize={18}
+      color={${textColor}}
+      uiTransform={{${uiTransform}}}
+      uiBackground={{ color: ${backgroundColor} }}
+    />`;
       case "button":
-        return `    <Button
-          value="${div.text}"
-          variant="primary"
-          fontSize={18}
-          color={Color4.fromHexString('#000000')}
-          uiTransform={{ 
-            positionType: 'absolute',
-            position: {
-              right: '${positionXright.toFixed(2)}px',
-              bottom: '${positionYbottom.toFixed(2)}px',
-            },
-            width: "${div.size.width.toFixed(2)}px",
-            height: "${div.size.height.toFixed(2)}px"
-          }}
-          uiBackground={{ color: Color4.fromHexString('${div.backgroundColor}') }}
-          onMouseDown={() => {
-            console.log('Clicked on the ${div.text} button')
-          }}
-      />\n  `;
+        return `
+    <Button
+      value="${div.text}"
+      variant="primary"
+      fontSize={18}
+      color={${textColor}}
+      uiTransform={{${uiTransform}}}
+      uiBackground={{ color: ${backgroundColor} }}
+      onMouseDown={() => console.log('Clicked on the ${div.text} button')}
+    />`;
       case "input":
-        return `    <Input
-          placeholder={'${div.text}'}
-          fontSize={18}
-          placeholderColor={Color4.Black()}
-          color={Color4.fromHexString('#000000')}
-          uiTransform={{ 
-            positionType: 'absolute',
-            position: {
-              right: '${positionXright.toFixed(2)}px',
-              bottom: '${positionYbottom.toFixed(2)}px',
-            },
-            width: "${div.size.width.toFixed(2)}px",
-            height: "${div.size.height.toFixed(2)}px"
-          }}
-          uiBackground={{ color: Color4.fromHexString('${div.backgroundColor}') }}
-          onSubmit={(value) => {
-              console.log('submitted value: ' + value)
-          }}
-      ></Input>\n`;
+        return `
+    <Input
+      placeholder='${div.text}'
+      fontSize={18}
+      placeholderColor={${textColor}}
+      color={${textColor}}
+      uiTransform={{${uiTransform}}}
+      uiBackground={{ color: ${backgroundColor} }}
+      onSubmit={(value) => console.log('submitted value: ' + value)}
+    />`;
+      case "container":
+        return `
+    <UiEntity 
+      uiTransform={{ 
+        display: 'flex', 
+        positionType: '${div.positionType}', 
+        flexDirection: '${div.flexDirection}', 
+        justifyContent: '${div.justifyContent}', 
+        alignItems: '${div.alignItems}', 
+        alignContent: '${div.alignContent}', 
+        flexWrap: '${div.flexWrap}', 
+        position: { 
+          right: '${div.containerName !== "" ? div.position.x : positionXright(div).toFixed(2)}px', 
+          bottom: '${div.containerName !== "" ? div.position.y : positionYbottom(div).toFixed(2)}px'
+        }, 
+        width: '${div.size.width.toFixed(2)}px',
+        height: '${div.size.height.toFixed(2)}px'
+        }} 
+      uiBackground={{ color: ${backgroundColor} }}
+    >
+    ${handleNestedUiElements(div)}
+    </UiEntity>`;
       default:
-        return "UiEntity";
+        return "";
     }
   };
 
-  const handleUiElements = () => {
-    return divs
-      .map((div) => {
-        return handleUiElementType(div.uiElementType, div);
-      })
+  const handleNestedUiElements = (div: Div) => {
+    return div.containedElements
+      .map((nestedDiv) => createUiElement(nestedDiv))
       .join("");
   };
 
-  const handleImports = () => {
-    const uniqueUiElementTypes = new Set();
-    divs.forEach((div) => {
-      const elementType =
-        div.uiElementType.slice(0, 1).toUpperCase() +
-        div.uiElementType.slice(1, div.uiElementType.length);
-      uniqueUiElementTypes.add(elementType);
-    });
+  const handleUiElements = () => {
+    return divs.map((div) => createUiElement(div)).join("");
+  };
 
+  const handleImports = () => {
+    const uniqueUiElementTypes = new Set<string>();
+
+    const addElementTypes = (div: Div) => {
+      if (div.uiElementType !== "container") {
+        const elementType =
+          div.uiElementType.charAt(0).toUpperCase() +
+          div.uiElementType.slice(1);
+        uniqueUiElementTypes.add(elementType);
+      }
+      div.containedElements.forEach(addElementTypes);
+    };
+
+    divs.forEach(addElementTypes);
     return Array.from(uniqueUiElementTypes).join(", ");
   };
 
-  let codeSnippet = `import { Color4 } from '@dcl/sdk/math'
+  const codeSnippet = `import { Color4 } from '@dcl/sdk/math'
 import ReactEcs, { ${handleImports()}, ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
 
 export function setupUi() {
-    ReactEcsRenderer.setUiRenderer(uiComponent)
+  ReactEcsRenderer.setUiRenderer(uiComponent)
 }
 
 const uiComponent = () => (
   <UiEntity
-      uiTransform={{
-          display: 'flex',
-          positionType: 'absolute',
-          position: {
-            right: '0.00%',
-            top: '0.00%'
-          },
-          width: '100%',
-          height: '100%'
-      }}
+    uiTransform={{
+      display: 'flex',
+      positionType: 'absolute',
+      position: {
+        right: '0.00%',
+        top: '0.00%'
+      },
+      width: '100%',
+      height: '100%'
+    }}
   >
   ${handleUiElements()}
   </UiEntity>
@@ -154,16 +182,16 @@ const uiComponent = () => (
                 <pre>{codeSnippet}</pre>
               </div>
             </div>
-            <div className="mt-2 flex w-full flex-row items-center justify-center border-t border-slate-400 pt-2">
+            <div className="mt-2 flex w-full flex-col items-center border-t border-slate-400 pt-2">
               <Button
                 className="mx-2 my-1 w-40 rounded-xl text-center"
-                text={showCopyCode ? "Copy Code" : "Copied!"}
-                variant="selected"
+                text={copyCodeText}
+                variant="copy"
                 onClick={() => {
                   navigator.clipboard.writeText(codeSnippet);
-                  setShowCopyCody(false);
+                  setCopyCodeText("Code Copied");
                   setTimeout(() => {
-                    setShowCopyCody(true);
+                    setCopyCodeText("Copy Code");
                   }, 2000);
                 }}
               />
