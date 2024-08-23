@@ -69,7 +69,7 @@ export const UiCode = ({ divs }: UiCodeProps) => {
       color={${textColor}}
       uiTransform={{${uiTransform}}}
       uiBackground={{ color: ${backgroundColor} }}
-      onMouseDown={() => console.log('Clicked on the ${div.text} button')}
+      onMouseDown={() => ${handleOnMouseDownType(div)}}
     />`;
       case "input":
         return `
@@ -86,7 +86,7 @@ export const UiCode = ({ divs }: UiCodeProps) => {
         return `
     <UiEntity 
       uiTransform={{ 
-        display: 'flex', 
+        display: ${div.actionType === "Show/Hide" ? div.actionTypeShow?.show && div.actionTypeShow.targetDivName.replace(/\s+/g, "") + " ? 'flex' : 'none'" : "'flex'"}, 
         positionType: '${div.positionType}', 
         flexDirection: '${div.flexDirection}', 
         justifyContent: '${div.justifyContent}', 
@@ -104,8 +104,35 @@ export const UiCode = ({ divs }: UiCodeProps) => {
     >
     ${handleNestedUiElements(div)}
     </UiEntity>`;
+      case "social":
+        return `
+    <UiEntity
+      uiTransform={{${uiTransform}}}
+      uiBackground={{
+        textureMode: 'stretch',
+        texture: {
+          src: 'images${div.backgroundImage}'
+        }
+      }}
+      onMouseDown={() => 
+      ${handleOnMouseDownType(div)}
+      }
+    />`;
       default:
         return "";
+    }
+  };
+
+  const handleOnMouseDownType = (div: Div) => {
+    if (div.actionType === "Show/Hide") {
+      return `${div.actionTypeShow?.targetDivName.replace(/\s+/g, "")} = !${div.actionTypeShow?.targetDivName.replace(/\s+/g, "")}`;
+    } else if (div.actionType === "Open Link") {
+      return `
+        void openExternalUrl({
+          url: '${div.onMouseDown}'
+        })`;
+    } else {
+      return "{}";
     }
   };
 
@@ -123,7 +150,7 @@ export const UiCode = ({ divs }: UiCodeProps) => {
     const uniqueUiElementTypes = new Set<string>();
 
     const addElementTypes = (div: Div) => {
-      if (div.uiElementType !== "container") {
+      if (div.uiElementType !== "container" && div.uiElementType !== "social") {
         const elementType =
           div.uiElementType.charAt(0).toUpperCase() +
           div.uiElementType.slice(1);
@@ -133,15 +160,52 @@ export const UiCode = ({ divs }: UiCodeProps) => {
     };
 
     divs.forEach(addElementTypes);
-    return Array.from(uniqueUiElementTypes).join(", ");
+
+    const elementsArray = Array.from(uniqueUiElementTypes);
+    return elementsArray.length > 0 ? elementsArray.join(", ") + "," : "";
+  };
+
+  const handleExternalUrl = () => {
+    const hasExternalUrl = (divs: Div[]): boolean => {
+      for (const div of divs) {
+        if (div.actionType === "Open Link") {
+          return true;
+        }
+        if (
+          div.uiElementType === "container" &&
+          hasExternalUrl(div.containedElements)
+        ) {
+          return true;
+        }
+      }
+      return false;
+    };
+
+    return hasExternalUrl(divs)
+      ? `import { openExternalUrl } from '~system/RestrictedActions'`
+      : "";
+  };
+
+  const handleVariables = () => {
+    return divs
+      .filter((div) => div.actionType === "Show/Hide")
+      .filter((div) => div.uuid === div.actionTypeShow?.targetDivUuid)
+      .map(
+        (div) =>
+          `let ${div.actionTypeShow?.targetDivName.replace(/\s+/g, "")} = ${div.actionTypeShow?.show ? "true" : "false"};`,
+      )
+      .join("\n");
   };
 
   const codeSnippet = `import { Color4 } from '@dcl/sdk/math'
-import ReactEcs, { ${handleImports()}, ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
+import ReactEcs, { ${handleImports()} ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
+${handleExternalUrl()}
 
 export function setupUi() {
   ReactEcsRenderer.setUiRenderer(uiComponent)
 }
+
+${handleVariables()}
 
 const uiComponent = () => (
   <UiEntity

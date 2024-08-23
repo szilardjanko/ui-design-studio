@@ -5,8 +5,18 @@ import { DeleteModal } from "@/components/selectedDiv/DeleteModal";
 import { SideBar } from "@/components/SideBar";
 import { SelectedEditor } from "@/components/selectedDiv/SelectedEditor";
 import { Canvas } from "@/components/Canvas";
+import {
+  ActionTypeCount,
+  ActionTypeShow,
+  ActionTypes,
+} from "@/components/selectedDiv/ClickActions";
 
-export type UiElementTypes = "container" | "label" | "button" | "input";
+export type UiElementTypes =
+  | "container"
+  | "label"
+  | "button"
+  | "input"
+  | "social";
 
 export type PositionTypes = {
   top: number;
@@ -36,6 +46,11 @@ export type Div = {
   flexWrap: FlexWrapTypes;
   margin: PositionTypes;
   padding: PositionTypes;
+  backgroundImage?: string;
+  onMouseDown?: string;
+  actionType?: ActionTypes;
+  actionTypeShow?: ActionTypeShow;
+  actionTypeCount?: ActionTypeCount;
 };
 
 export type JustifyContentTypes =
@@ -60,18 +75,24 @@ export type FlexWrapTypes = "wrap" | "nowrap" | "wrap-reverse";
 
 export type FlexDirectionTypes = "row" | "column";
 
-export type PropertyType =
-  | "flexDirection"
-  | "justifyContent"
-  | "alignContent"
-  | "alignItems"
-  | "flexWrap";
-
-export type ValueType =
-  | FlexDirectionTypes
-  | JustifyContentTypes
-  | AlignItemsTypes
-  | FlexWrapTypes;
+export type PresetTypes =
+  | "instagram"
+  | "instagram_color"
+  | "instagram_negative"
+  | "facebook"
+  | "facebook_black"
+  | "facebook_negative"
+  | "twitter"
+  | "twitter_negative"
+  | "youtube"
+  | "youtube_negative"
+  | "discord"
+  | "discord_negative"
+  | "github"
+  | "github_negative"
+  | "lens"
+  | "lens_black"
+  | "lens_green";
 
 const CreateUi = () => {
   const targetRef = useRef<HTMLDivElement>(null);
@@ -91,7 +112,6 @@ const CreateUi = () => {
   const [cellWidth, setCellWidth] = useState(0);
   const [cellHeight, setCellHeight] = useState(0);
   const [selected, setSelected] = useState<Div | null>(null);
-  const [resetDivClickCount, setResetDivClickCount] = useState(0);
 
   const [zoomLevel, setZoomLevel] = useState(1);
   const [bgImage, setBgImage] = useState(`url(dclBgDay.png)`);
@@ -118,8 +138,6 @@ const CreateUi = () => {
   };
 
   useEffect(() => {
-    console.log(window.innerHeight, "height");
-    console.log(window.innerWidth, "width");
     handleResetZoomLevel();
   }, []);
 
@@ -146,16 +164,11 @@ const CreateUi = () => {
 
   const handleDivClick = (div: Div, e: React.MouseEvent) => {
     e.stopPropagation();
-    setResetDivClickCount(0);
     setSelected(div);
   };
 
   const handleResetDivClick = () => {
-    setResetDivClickCount((prev) => prev + 1);
-    if (resetDivClickCount >= 1) {
-      setSelected(null);
-      setResetDivClickCount(0);
-    }
+    setSelected(null);
   };
 
   const handleSetShowGrid = () => {
@@ -169,14 +182,15 @@ const CreateUi = () => {
 
   const gridBackgroundStyle = showGrid
     ? {
-      backgroundImage: `
+        backgroundImage: `
         linear-gradient(to right, #cccccc 1px, transparent 1px),
         linear-gradient(to bottom, #cccccc 1px, transparent 1px)`,
-      backgroundSize: `${cellWidth * zoomLevel}px ${cellHeight * zoomLevel
+        backgroundSize: `${cellWidth * zoomLevel}px ${
+          cellHeight * zoomLevel
         }px`,
-      backgroundPosition: "top left",
-      opacity: 0.5,
-    }
+        backgroundPosition: "top left",
+        opacity: 0.5,
+      }
     : {};
 
   const snapToGrid = (position: Position) => {
@@ -192,36 +206,108 @@ const CreateUi = () => {
     return { x: snappedX, y: snappedY };
   };
 
-  const addDiv = (uiElementType: UiElementTypes) => {
+  const addDiv = (uiElementType: UiElementTypes, presetType?: PresetTypes) => {
     const initialWidthPct = 156;
     const initialHeightPct = 78;
     const initialPosition = { x: 50, y: 44.44 };
 
-    setDivs([
-      ...divs,
-      {
-        uuid: crypto.randomUUID(),
-        uiElementType: uiElementType,
-        name: `${uiElementType} ${divs.length + 1}`,
-        display: "flex",
-        containedElements: [],
-        containerName: "",
-        positionType: "absolute",
-        position: initialPosition,
-        text: `New UI ${uiElementType} ${divs.length + 1}`,
-        size: { width: initialWidthPct, height: initialHeightPct },
-        backgroundColor: "#ffffff",
-        textColor: "#000000",
-        lock: false,
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        alignContent: "center",
-        alignItems: "center",
-        flexWrap: "nowrap",
-        margin: { top: 0, right: 0, bottom: 0, left: 0 },
-        padding: { top: 0, right: 0, bottom: 0, left: 0 },
-      },
-    ]);
+    if (uiElementType === "social" || uiElementType === "button") {
+      setDivs([
+        ...divs,
+        {
+          uuid: crypto.randomUUID(),
+          uiElementType: uiElementType,
+          name: `${uiElementType} ${divs.length + 1}`,
+          display: "flex",
+          containedElements: [],
+          containerName: "",
+          positionType: "absolute",
+          position: initialPosition,
+          text:
+            uiElementType === "social"
+              ? ""
+              : `New UI ${uiElementType} ${divs.length + 1}`,
+          size:
+            uiElementType === "social"
+              ? { width: 52, height: 52 }
+              : { width: initialWidthPct, height: initialHeightPct },
+          textColor: "#000000",
+          lock: false,
+          flexDirection: "row",
+          justifyContent: "flex-start",
+          alignContent: "center",
+          alignItems: "center",
+          flexWrap: "nowrap",
+          margin: { top: 0, right: 0, bottom: 0, left: 0 },
+          padding: { top: 0, right: 0, bottom: 0, left: 0 },
+          backgroundColor: "#ffffff",
+          backgroundImage:
+            presetType === "instagram"
+              ? `/social/instagram.png`
+              : presetType === "instagram_color"
+                ? `/social/instagram_color.png`
+                : presetType === "instagram_negative"
+                  ? `/social/instagram_negative.png`
+                  : presetType === "facebook"
+                    ? `/social/facebook.png`
+                    : presetType === "facebook_black"
+                      ? `/social/facebook_black.png`
+                      : presetType === "facebook_negative"
+                        ? `/social/facebook_negative.png`
+                        : presetType === "twitter"
+                          ? `/social/twitter.png`
+                          : presetType === "twitter_negative"
+                            ? `/social/twitter_negative.png`
+                            : presetType === "youtube"
+                              ? `/social/youtube.png`
+                              : presetType === "youtube_negative"
+                                ? `/social/youtube_negative.png`
+                                : presetType === "discord"
+                                  ? `/social/discord.png`
+                                  : presetType === "discord_negative"
+                                    ? `/social/discord_negative.png`
+                                    : presetType === "github"
+                                      ? `/social/github.png`
+                                      : presetType === "github_negative"
+                                        ? `/social/github_negative.png`
+                                        : presetType === "lens"
+                                          ? `/social/lens.png`
+                                          : presetType === "lens_black"
+                                            ? `/social/lens_black.png`
+                                            : presetType === "lens_green"
+                                              ? `/social/lens_green.png`
+                                              : "",
+          onMouseDown: "",
+          actionType: "Open Link",
+        },
+      ]);
+    } else {
+      setDivs([
+        ...divs,
+        {
+          uuid: crypto.randomUUID(),
+          uiElementType: uiElementType,
+          name: `${uiElementType} ${divs.length + 1}`,
+          display: "flex",
+          containedElements: [],
+          containerName: "",
+          positionType: "absolute",
+          position: initialPosition,
+          text: `New UI ${uiElementType} ${divs.length + 1}`,
+          size: { width: initialWidthPct, height: initialHeightPct },
+          backgroundColor: "#ffffff",
+          textColor: "#000000",
+          lock: false,
+          flexDirection: "row",
+          justifyContent: "flex-start",
+          alignContent: "center",
+          alignItems: "center",
+          flexWrap: "nowrap",
+          margin: { top: 0, right: 0, bottom: 0, left: 0 },
+          padding: { top: 0, right: 0, bottom: 0, left: 0 },
+        },
+      ]);
+    }
   };
 
   const updatePosition = (newPosition: Position) => {
@@ -301,6 +387,143 @@ const CreateUi = () => {
     updateDivs.map((div) => {
       if (div.uuid === selected.uuid) {
         div.size = newSize;
+      }
+    });
+    setDivs(updateDivs);
+  };
+
+  const updateOnMouseDown = (newMouseDown: string) => {
+    if (!selected) return;
+
+    const updateDivs = [...divs];
+
+    if (selected.containerName !== "") {
+      updateDivs.map((div) => {
+        if (div.uuid === selected.containerName) {
+          div.containedElements.map((containedElement) => {
+            if (containedElement.uuid === selected.uuid) {
+              containedElement.onMouseDown = newMouseDown;
+            }
+          });
+        } else {
+          div.containedElements
+            .filter(
+              (containedElementLayerTwo) =>
+                containedElementLayerTwo.uiElementType === "container",
+            )
+            .map((containedElementLayerTwo) => {
+              containedElementLayerTwo.containedElements.map(
+                (containedElementLayerThree) => {
+                  if (containedElementLayerThree.uuid === selected.uuid) {
+                    containedElementLayerThree.onMouseDown = newMouseDown;
+                  }
+                },
+              );
+            });
+        }
+      });
+      setDivs(updateDivs);
+    }
+
+    updateDivs.map((div) => {
+      if (div.uuid === selected.uuid) {
+        div.onMouseDown = newMouseDown;
+      }
+    });
+    setDivs(updateDivs);
+  };
+
+  const updateActionType = (newActionType: ActionTypes) => {
+    if (!selected) return;
+
+    const updateDivs = [...divs];
+
+    if (selected.containerName !== "") {
+      updateDivs.map((div) => {
+        if (div.uuid === selected.containerName) {
+          div.containedElements.map((containedElement) => {
+            if (containedElement.uuid === selected.uuid) {
+              containedElement.actionType = newActionType;
+            }
+          });
+        } else {
+          div.containedElements
+            .filter(
+              (containedElementLayerTwo) =>
+                containedElementLayerTwo.uiElementType === "container",
+            )
+            .map((containedElementLayerTwo) => {
+              containedElementLayerTwo.containedElements.map(
+                (containedElementLayerThree) => {
+                  if (containedElementLayerThree.uuid === selected.uuid) {
+                    containedElementLayerThree.actionType = newActionType;
+                  }
+                },
+              );
+            });
+        }
+      });
+      setDivs(updateDivs);
+    }
+
+    updateDivs.map((div) => {
+      if (div.uuid === selected.uuid) {
+        div.actionType = newActionType;
+      }
+    });
+    setDivs(updateDivs);
+  };
+
+  const updateActionTypeShow = (newActionTypeShow: {
+    setterDivUuid: string;
+    setterDivName: string;
+    targetDivUuid: string;
+    targetDivName: string;
+    show: boolean;
+  }) => {
+    if (!selected) return;
+
+    const updateDivs = [...divs];
+
+    if (selected.containerName !== "") {
+      updateDivs.map((div) => {
+        if (div.uuid === selected.containerName) {
+          div.containedElements.map((containedElement) => {
+            if (containedElement.uuid === selected.uuid) {
+              containedElement.actionTypeShow = newActionTypeShow;
+            }
+          });
+        } else {
+          div.containedElements
+            .filter(
+              (containedElementLayerTwo) =>
+                containedElementLayerTwo.uiElementType === "container",
+            )
+            .map((containedElementLayerTwo) => {
+              containedElementLayerTwo.containedElements.map(
+                (containedElementLayerThree) => {
+                  if (containedElementLayerThree.uuid === selected.uuid) {
+                    containedElementLayerThree.actionTypeShow =
+                      newActionTypeShow;
+                  }
+                },
+              );
+            });
+        }
+      });
+
+      setDivs(updateDivs);
+    }
+
+    updateDivs.map((div) => {
+      if (div.uuid === newActionTypeShow.targetDivUuid) {
+        div.actionType = "Show/Hide";
+        div.actionTypeShow = newActionTypeShow;
+      }
+    });
+    updateDivs.map((div) => {
+      if (div.uuid === selected.uuid) {
+        div.actionTypeShow = newActionTypeShow;
       }
     });
     setDivs(updateDivs);
@@ -664,7 +887,6 @@ const CreateUi = () => {
         <SelectedEditor
           divs={divs}
           selected={selected}
-          resetDivClickCount={resetDivClickCount}
           handleDelete={handleDelete}
           handleSetLock={handleSetLock}
           setDivs={setDivs}
@@ -675,6 +897,9 @@ const CreateUi = () => {
           updateSize={updateSize}
           updateText={updateText}
           updateTextColor={updateTextColor}
+          updateOnMouseDown={updateOnMouseDown}
+          updateActionType={updateActionType}
+          updateActionTypeShow={updateActionTypeShow}
           setSelected={setSelected}
         />
       </div>

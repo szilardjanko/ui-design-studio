@@ -21,12 +21,18 @@ export const DivInfo = ({ div, handleSetLock }: DivInfoProps) => {
     <div className="flex w-full flex-col items-start justify-center border-b border-slate-500 bg-gradient-to-t from-slate-900 to-slate-800 py-2">
       <div className="ml-4 text-left text-sm text-white">
         <div
-          className={`overflow-hidden transition-all duration-700 ${hidden ? "max-h-0" : "max-h-96"
-            }`}
+          className={`overflow-hidden transition-all duration-700 ${
+            hidden ? "max-h-0" : "max-h-96"
+          }`}
         >
           <div>Type: {div.uiElementType}</div>
-          {div.uiElementType != "container" && <div>Text: {div.text}</div>}
-          <div>Background Color: {div.backgroundColor}</div>
+          {div.uiElementType != "container" &&
+            div.uiElementType != "social" && <div>Text: {div.text}</div>}
+          {div.backgroundImage ? (
+            <div>Image: {div.backgroundImage}</div>
+          ) : (
+            <div>Background Color: {div.backgroundColor}</div>
+          )}
           <div>Position Type: {div.positionType}</div>
           <div>
             Position: x: {div.position.x.toFixed(2)}% y:{" "}
@@ -49,14 +55,21 @@ export const DivInfo = ({ div, handleSetLock }: DivInfoProps) => {
           >
             Locked: {div.lock ? "True" : "False"}
           </div>
-          {div.uiElementType === "button" && (
-            <div
-              className="cursor-pointer"
-              onClick={() => console.log("settup button functions")}
-            >
-              Set Button Function
-            </div>
-          )}
+          <div>Action Type: {div.actionType}</div>
+          {div.actionType === "Open Link" ? (
+            <div>Action: {div.onMouseDown}</div>
+          ) : div.actionType === "Show/Hide" ? (
+            <>
+              <div>Show: {div.actionTypeShow?.show ? "True" : "False"}</div>
+              <div>
+                Setter: {div.actionTypeShow?.setterDivName}
+                <br />
+                Target: {div.actionTypeShow?.targetDivName}
+              </div>
+            </>
+          ) : div.actionType === "Count" ? (
+            <div>Count: {div.actionTypeCount?.count}</div>
+          ) : null}
         </div>
       </div>
       <div

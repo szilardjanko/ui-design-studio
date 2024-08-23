@@ -96,6 +96,7 @@ export const UiElement = ({
 
   const dragMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault();
+    e.stopPropagation();
     if (lock) {
       return;
     }
@@ -259,13 +260,7 @@ export const UiElement = ({
           onSelect={onSelect}
         />
       ) : (
-        <div
-          className="flex h-full w-full items-center justify-center"
-          style={{
-            backgroundColor: backgroundColor,
-            color: textColor,
-          }}
-        >
+        <div className="flex h-full w-full items-center justify-center">
           {text}
         </div>
       )}

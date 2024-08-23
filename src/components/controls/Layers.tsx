@@ -6,6 +6,7 @@ import {
   ContainerIcon,
   InputIcon,
   LabelIcon,
+  SocialIcon,
 } from "../icons/UiElementIcons";
 
 type LayersProps = {
@@ -90,6 +91,8 @@ export const Layers = ({
                             <InputIcon />
                           ) : div.uiElementType === "container" ? (
                             <ContainerIcon />
+                          ) : div.uiElementType === "social" ? (
+                            <SocialIcon />
                           ) : null}
                         </div>
                         {div.name}
@@ -140,6 +143,8 @@ export const Layers = ({
                       <InputIcon />
                     ) : div.uiElementType === "container" ? (
                       <ContainerIcon />
+                    ) : div.uiElementType === "social" ? (
+                      <SocialIcon />
                     ) : null}
                   </div>
                   {div.name}
