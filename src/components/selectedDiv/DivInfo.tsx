@@ -55,21 +55,33 @@ export const DivInfo = ({ div, handleSetLock }: DivInfoProps) => {
           >
             Locked: {div.lock ? "True" : "False"}
           </div>
-          <div>Action Type: {div.actionType}</div>
-          {div.actionType === "Open Link" ? (
-            <div>Action: {div.onMouseDown}</div>
-          ) : div.actionType === "Show/Hide" ? (
-            <>
-              <div>Show: {div.actionTypeShow?.show ? "True" : "False"}</div>
-              <div>
-                Setter: {div.actionTypeShow?.setterDivName}
-                <br />
-                Target: {div.actionTypeShow?.targetDivName}
-              </div>
-            </>
-          ) : div.actionType === "Count" ? (
-            <div>Count: {div.actionTypeCount?.count}</div>
-          ) : null}
+          {/* {div.actionType && ( */}
+          <>
+            <div>Action Type: {div.actionType}</div>
+            {div.actionType === "Open Link" ? (
+              <div>Action: {div.onMouseDown}</div>
+            ) : div.actionType === "Show/Hide" ? (
+              <>
+                <div>Show: {div.actionTypeShow?.show ? "True" : "False"}</div>
+                <div>
+                  Setter: {div.actionTypeShow?.setterDivName}
+                  <br />
+                  Target: {div.actionTypeShow?.targetDivName}
+                </div>
+              </>
+            ) : div.actionType === "Count" ? (
+              <>
+                <div>Count: {div.actionTypeCount?.count}</div>
+                <div>
+                  Setter: {div.actionTypeCount?.setterDivName}
+                  <br />
+                  Target: {div.actionTypeCount?.targetDivName}
+                </div>
+              </>
+            ) : null}
+          </>
+          {/* )} */}
+          <div>{div.uuid}</div>
         </div>
       </div>
       <div

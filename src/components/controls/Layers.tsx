@@ -30,7 +30,7 @@ export const Layers = ({
   useEffect(() => {
     setIsDivLockHover(new Array(divs.length).fill(false));
     setIsContainerLockHover(new Array(divs.length).fill(false));
-  }, [divs]);
+  }, []);
 
   const handleMouseEnter = (index: number, isContainer: boolean) => {
     if (isContainer) {

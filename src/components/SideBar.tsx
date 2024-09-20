@@ -8,15 +8,11 @@ import { GridControls } from "./controls/GridControls";
 import { ZoomControl } from "./controls/ZoomControl";
 import { Layers } from "./controls/Layers";
 import { UiCode } from "./uiCode/uiCode";
-import { Div, UiElementTypes } from "@/pages/CreateUi";
 import { useSideBar } from "@/context/SideBarContext";
+import { useUiElement } from "@/context/UiElementContext";
+import { SaveLoad } from "./controls/SaveLoad";
 
 type SideBarProps = {
-  addDiv: (uiElementType: UiElementTypes) => void;
-  divs: Div[];
-  selected: Div | null;
-  handleDivClick: (div: Div, e: React.MouseEvent) => void;
-  handleSetLock: (lock: boolean) => void;
   bgImage: string;
   setBgImage: (value: string) => void;
   handleSetBackgroundImage: (direction: number) => () => void;
@@ -31,11 +27,6 @@ type SideBarProps = {
 };
 
 export const SideBar = ({
-  addDiv,
-  divs,
-  selected,
-  handleDivClick,
-  handleSetLock,
   bgImage,
   setBgImage,
   handleSetBackgroundImage,
@@ -49,9 +40,14 @@ export const SideBar = ({
   handleResetZoomLevel,
 }: SideBarProps) => {
   const { sideBarOptions, handleSideBarSelection } = useSideBar();
+  const { divs, selected, addDiv, handleDivClick, handleSetLock } =
+    useUiElement();
 
   return (
     <div className="flex select-none flex-col px-2">
+      <div className="mb-2 border-b pb-2">
+        <SaveLoad />
+      </div>
       <Button
         text="Components"
         onClick={() => handleSideBarSelection("components")}
@@ -106,7 +102,6 @@ export const SideBar = ({
           }}
         />
       </div>
-
       <div className="mt-2 border-t pt-2">
         <UiCode divs={divs} />
       </div>

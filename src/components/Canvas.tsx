@@ -1,12 +1,8 @@
 import React from "react";
-import { Boundary, Position, Size, UiElement } from "./UiElement";
-import { Div } from "@/pages/CreateUi";
+import { Boundary, Position, UiElement } from "./UiElement";
+import { useUiElement } from "@/context/UiElementContext";
 
 type CanvasProps = {
-  divs: Div[];
-  selected: Div | null;
-  setDeleteItem: React.Dispatch<React.SetStateAction<Div | null>>;
-  setShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
   bgImage: string | null;
   gridBackgroundStyle: React.CSSProperties;
   boundary: Boundary;
@@ -18,19 +14,9 @@ type CanvasProps = {
   cellHeight: number;
   zoomLevel: number;
   targetRef: React.RefObject<HTMLDivElement>;
-  handleDivClick: (div: Div, e: React.MouseEvent) => void;
-  updatePosition: (newPosition: Position) => void;
-  updateSize: (newSize: Size) => void;
-  updateText: (newText: string) => void;
-  handleSetLock: (lock: boolean) => void;
-  handleResetDivClick: () => void;
 };
 
 export const Canvas = ({
-  divs,
-  selected,
-  setDeleteItem,
-  setShowDeleteModal,
   bgImage,
   gridBackgroundStyle,
   boundary,
@@ -39,13 +25,20 @@ export const Canvas = ({
   cellHeight,
   zoomLevel,
   targetRef,
-  handleDivClick,
-  updatePosition,
-  updateSize,
-  updateText,
-  handleSetLock,
-  handleResetDivClick,
 }: CanvasProps) => {
+  const {
+    divs,
+    selected,
+    handleDivClick,
+    handleResetDivClick,
+    setDeleteItem,
+    setShowDeleteModal,
+    handleSetLock,
+    updatePosition,
+    updateSize,
+    updateText,
+  } = useUiElement();
+
   return (
     <div className="overflow-auto" style={{ width: "100vw" }}>
       <div
@@ -66,7 +59,7 @@ export const Canvas = ({
             backgroundColor: bgImage ? undefined : "#ffffff",
           }}
           onClick={(e) => {
-            if (!(e.target as HTMLElement).closest('.ui-element')) {
+            if (!(e.target as HTMLElement).closest(".ui-element")) {
               handleResetDivClick();
             }
           }}
@@ -111,7 +104,7 @@ export const Canvas = ({
               backgroundColor={div.backgroundColor}
               textColor={div.textColor}
               startPosition={{ x: 0, y: 0 }}
-              setStartPosition={() => { }}
+              setStartPosition={() => {}}
               boundary={boundary}
               snapToGrid={snapToGrid}
               cellHeight={cellHeight}
@@ -138,6 +131,8 @@ export const Canvas = ({
               updatePosition={updatePosition}
               updateSize={updateSize}
               updateText={updateText}
+              actionType={div.actionType}
+              actionTypeCount={div.actionTypeCount}
             />
           ))}
         </div>

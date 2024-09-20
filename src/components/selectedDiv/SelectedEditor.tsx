@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Div, PositionTypes } from "@/pages/CreateUi";
-import { Position, Size } from "../UiElement";
-import { ActionTypeShow, ActionTypes, ClickActions } from "./ClickActions";
+import { ClickActions } from "./ClickActions";
 import {
   ButtonIcon,
   ContainerIcon,
@@ -17,46 +15,9 @@ import { AlignControls } from "./AlignControls";
 import { AddDivs } from "./AddDivs";
 import { ContainerProperties } from "./ContainerProperties";
 import { PaddingMarginControls } from "./PaddingMarginControls";
-import { DeleteModal } from "./DeleteModal";
+import { useUiElement } from "@/context/UiElementContext";
 
-type SelectedEditorProps = {
-  selected: Div | null;
-  divs: Div[];
-  setDivs: React.Dispatch<React.SetStateAction<Div[]>>;
-  updatePosition: (newPosition: Position) => void;
-  updateSize: (newSize: Size) => void;
-  updateText: (newText: string) => void;
-  updateBackgroundColor: (newBackgroundColor: string) => void;
-  updateTextColor: (newTextColor: string) => void;
-  updateMargin: (newMargin: PositionTypes) => void;
-  updatePadding: (newPadding: PositionTypes) => void;
-  handleSetLock: (lock: boolean) => void;
-  updateOnMouseDown: (newMouseDown: string) => void;
-  updateActionType: (newActionType: ActionTypes) => void;
-  updateActionTypeShow: (newActionTypeShow: ActionTypeShow) => void;
-  handleDelete: () => void;
-  setSelected: React.Dispatch<React.SetStateAction<Div | null>>;
-};
-
-export const SelectedEditor = ({
-  selected,
-  divs,
-  setDivs,
-  updatePosition,
-  updateSize,
-  updateText,
-  updateBackgroundColor,
-  updateTextColor,
-  updateMargin,
-  updatePadding,
-  handleSetLock,
-  updateOnMouseDown,
-  updateActionType,
-  updateActionTypeShow,
-  handleDelete,
-  setSelected,
-}: SelectedEditorProps) => {
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+export const SelectedEditor = () => {
   const [positionX, setPositionX] = useState("0");
   const [positionY, setPositionY] = useState("0");
   const [width, setWidth] = useState("0");
@@ -73,6 +34,26 @@ export const SelectedEditor = ({
     bottom: "0",
     left: "0",
   });
+  const {
+    selected,
+    setSelected,
+    divs,
+    setDivs,
+    handleSetLock,
+    updateText,
+    updateBackgroundColor,
+    updateTextColor,
+    updatePosition,
+    updateSize,
+    updateMargin,
+    updatePadding,
+    updateOnMouseDown,
+    updateActionType,
+    updateActionTypeShow,
+    updateActionTypeCount,
+    setShowDeleteModal,
+    setDeleteItem,
+  } = useUiElement();
 
   const screenWidth = 1248;
   const screenHeight = 702;
@@ -100,6 +81,7 @@ export const SelectedEditor = ({
 
   const handleShowDeleteModal = () => {
     if (selected && selected.lock) return;
+    setDeleteItem(selected);
     setShowDeleteModal(true);
   };
 
@@ -185,20 +167,16 @@ export const SelectedEditor = ({
             setPadding={setPadding}
           />
           {(selected.uiElementType === "social" ||
-            selected.uiElementType === "button") && (
+            selected.uiElementType === "button" ||
+            (selected.uiElementType === "label" &&
+              selected.actionType === "Count")) && (
             <ClickActions
               div={selected}
               divs={divs}
               onMouseDownChange={updateOnMouseDown}
               onActionTypeChange={updateActionType}
               onActionTypeShowChange={updateActionTypeShow}
-            />
-          )}
-          {showDeleteModal && (
-            <DeleteModal
-              div={selected}
-              setShowDeleteModal={setShowDeleteModal}
-              onDelete={handleDelete}
+              onActionTypeCountChange={updateActionTypeCount}
             />
           )}
         </div>

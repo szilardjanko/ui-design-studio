@@ -54,7 +54,7 @@ export const UiCode = ({ divs }: UiCodeProps) => {
       case "label":
         return `
     <Label
-      value="${div.text}"
+      value=${div.actionType === "Count" ? "{" + div.actionTypeCount?.targetDivName.replace(/\s+/g, "") + ".toString()}" : "'" + div.text + "'"}
       fontSize={18}
       color={${textColor}}
       uiTransform={{${uiTransform}}}
@@ -131,6 +131,8 @@ export const UiCode = ({ divs }: UiCodeProps) => {
         void openExternalUrl({
           url: '${div.onMouseDown}'
         })`;
+    } else if (div.actionType === "Count") {
+      return `${div.actionTypeCount?.targetDivName.replace(/\s+/g, "")} ${div.actionTypeCount?.type === "add" ? "+" : "-"}= 1`;
     } else {
       return "{}";
     }
@@ -186,7 +188,7 @@ export const UiCode = ({ divs }: UiCodeProps) => {
       : "";
   };
 
-  const handleVariables = () => {
+  const handleBooleanVariables = () => {
     return divs
       .filter((div) => div.actionType === "Show/Hide")
       .filter((div) => div.uuid === div.actionTypeShow?.targetDivUuid)
@@ -197,6 +199,37 @@ export const UiCode = ({ divs }: UiCodeProps) => {
       .join("\n");
   };
 
+  const handleNumberVariables = () => {
+    const numberVariables: Set<string> = new Set();
+
+    const findNumberVariables = (divs: Div[]) => {
+      for (const div of divs) {
+        if (
+          div.uiElementType === "label" &&
+          div.actionType === "Count" &&
+          div.actionTypeCount
+        ) {
+          const variableName = div.actionTypeCount.targetDivName.replace(
+            /\s+/g,
+            "",
+          );
+          if (!numberVariables.has(variableName)) {
+            numberVariables.add(
+              `let ${variableName} = ${div.actionTypeCount.count};`,
+            );
+          }
+        }
+        if (div.uiElementType === "container") {
+          findNumberVariables(div.containedElements);
+        }
+      }
+    };
+
+    findNumberVariables(divs);
+
+    return Array.from(numberVariables).join("\n");
+  };
+
   const codeSnippet = `import { Color4 } from '@dcl/sdk/math'
 import ReactEcs, { ${handleImports()} ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
 ${handleExternalUrl()}
@@ -204,8 +237,8 @@ ${handleExternalUrl()}
 export function setupUi() {
   ReactEcsRenderer.setUiRenderer(uiComponent)
 }
-
-${handleVariables()}
+${handleBooleanVariables() ? handleBooleanVariables() : ""}
+${handleNumberVariables() ? handleNumberVariables() : ""}
 
 const uiComponent = () => (
   <UiEntity

@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import { Div, UiElementTypes } from "@/pages/CreateUi";
 import { UiElementLayout } from "./UiElementLayout";
 import { UiContainerLayout } from "./UiContainerLayout";
+import {
+  ActionTypeCount,
+  ActionTypeShow,
+  ActionTypes,
+} from "./selectedDiv/ClickActions";
 
 export type Position = {
   x: number;
@@ -57,6 +62,9 @@ type UiElementProps = {
   updateSize: (newSize: Size) => void;
   updateText: (newText: string) => void;
   handleDivSetLock: (lock: boolean) => void;
+  actionType: ActionTypes;
+  actionTypeShow?: ActionTypeShow;
+  actionTypeCount?: ActionTypeCount;
 };
 
 export const UiElement = ({
@@ -91,6 +99,9 @@ export const UiElement = ({
   updateSize,
   updateText,
   handleDivSetLock,
+  actionType,
+  actionTypeShow,
+  actionTypeCount,
 }: UiElementProps) => {
   const [isMouseEnter, setIsMouseEnter] = useState(false);
 
@@ -261,7 +272,11 @@ export const UiElement = ({
         />
       ) : (
         <div className="flex h-full w-full items-center justify-center">
-          {text}
+          {uiElementType === "label" && actionType === "Count" ? (
+            <div>{actionTypeCount?.count}</div>
+          ) : (
+            text
+          )}
         </div>
       )}
     </UiElementLayout>

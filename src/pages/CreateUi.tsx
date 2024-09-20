@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Position, PositionType, Size } from "@/components/UiElement";
+import { Position, PositionType } from "@/components/UiElement";
 import { BlockIcon } from "@/components/icons/Block";
 import { DeleteModal } from "@/components/selectedDiv/DeleteModal";
 import { SideBar } from "@/components/SideBar";
@@ -10,6 +10,9 @@ import {
   ActionTypeShow,
   ActionTypes,
 } from "@/components/selectedDiv/ClickActions";
+import { useUiElement } from "@/context/UiElementContext";
+import { useSideBar } from "@/context/SideBarContext";
+import { PopupModal } from "@/components/PopupModal";
 
 export type UiElementTypes =
   | "container"
@@ -48,7 +51,7 @@ export type Div = {
   padding: PositionTypes;
   backgroundImage?: string;
   onMouseDown?: string;
-  actionType?: ActionTypes;
+  actionType: ActionTypes;
   actionTypeShow?: ActionTypeShow;
   actionTypeCount?: ActionTypeCount;
 };
@@ -96,9 +99,6 @@ export type PresetTypes =
 
 const CreateUi = () => {
   const targetRef = useRef<HTMLDivElement>(null);
-  const [divs, setDivs] = useState<Array<Div>>([]);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteItem, setDeleteItem] = useState<Div | null>(null);
   const [boundary, setBoundary] = useState({
     top: 0,
     left: 0,
@@ -111,11 +111,12 @@ const CreateUi = () => {
   const gridRows = 9 * gridSize;
   const [cellWidth, setCellWidth] = useState(0);
   const [cellHeight, setCellHeight] = useState(0);
-  const [selected, setSelected] = useState<Div | null>(null);
-
   const [zoomLevel, setZoomLevel] = useState(1);
   const [bgImage, setBgImage] = useState(`url(dclBgDay.png)`);
   const [bgImageCount, setBgImageCount] = useState(0);
+
+  const { showDeleteModal } = useUiElement();
+  const { popupText } = useSideBar();
 
   const calculateZoomLevel = (windowWidth: number) => {
     const minWidth = 1366;
@@ -141,7 +142,7 @@ const CreateUi = () => {
     handleResetZoomLevel();
   }, []);
 
-  const handleZoomChange = (event: any) => {
+  const handleZoomChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setZoomLevel(parseFloat(event.target.value));
   };
 
@@ -161,15 +162,6 @@ const CreateUi = () => {
       });
     }
   }, [zoomLevel, gridCols, gridRows]);
-
-  const handleDivClick = (div: Div, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setSelected(div);
-  };
-
-  const handleResetDivClick = () => {
-    setSelected(null);
-  };
 
   const handleSetShowGrid = () => {
     setShowGrid((prev) => !prev);
@@ -206,535 +198,6 @@ const CreateUi = () => {
     return { x: snappedX, y: snappedY };
   };
 
-  const addDiv = (uiElementType: UiElementTypes, presetType?: PresetTypes) => {
-    const initialWidthPct = 156;
-    const initialHeightPct = 78;
-    const initialPosition = { x: 50, y: 44.44 };
-
-    if (uiElementType === "social" || uiElementType === "button") {
-      setDivs([
-        ...divs,
-        {
-          uuid: crypto.randomUUID(),
-          uiElementType: uiElementType,
-          name: `${uiElementType} ${divs.length + 1}`,
-          display: "flex",
-          containedElements: [],
-          containerName: "",
-          positionType: "absolute",
-          position: initialPosition,
-          text:
-            uiElementType === "social"
-              ? ""
-              : `New UI ${uiElementType} ${divs.length + 1}`,
-          size:
-            uiElementType === "social"
-              ? { width: 52, height: 52 }
-              : { width: initialWidthPct, height: initialHeightPct },
-          textColor: "#000000",
-          lock: false,
-          flexDirection: "row",
-          justifyContent: "flex-start",
-          alignContent: "center",
-          alignItems: "center",
-          flexWrap: "nowrap",
-          margin: { top: 0, right: 0, bottom: 0, left: 0 },
-          padding: { top: 0, right: 0, bottom: 0, left: 0 },
-          backgroundColor: "#ffffff",
-          backgroundImage:
-            presetType === "instagram"
-              ? `/social/instagram.png`
-              : presetType === "instagram_color"
-                ? `/social/instagram_color.png`
-                : presetType === "instagram_negative"
-                  ? `/social/instagram_negative.png`
-                  : presetType === "facebook"
-                    ? `/social/facebook.png`
-                    : presetType === "facebook_black"
-                      ? `/social/facebook_black.png`
-                      : presetType === "facebook_negative"
-                        ? `/social/facebook_negative.png`
-                        : presetType === "twitter"
-                          ? `/social/twitter.png`
-                          : presetType === "twitter_negative"
-                            ? `/social/twitter_negative.png`
-                            : presetType === "youtube"
-                              ? `/social/youtube.png`
-                              : presetType === "youtube_negative"
-                                ? `/social/youtube_negative.png`
-                                : presetType === "discord"
-                                  ? `/social/discord.png`
-                                  : presetType === "discord_negative"
-                                    ? `/social/discord_negative.png`
-                                    : presetType === "github"
-                                      ? `/social/github.png`
-                                      : presetType === "github_negative"
-                                        ? `/social/github_negative.png`
-                                        : presetType === "lens"
-                                          ? `/social/lens.png`
-                                          : presetType === "lens_black"
-                                            ? `/social/lens_black.png`
-                                            : presetType === "lens_green"
-                                              ? `/social/lens_green.png`
-                                              : "",
-          onMouseDown: "",
-          actionType: "Open Link",
-        },
-      ]);
-    } else {
-      setDivs([
-        ...divs,
-        {
-          uuid: crypto.randomUUID(),
-          uiElementType: uiElementType,
-          name: `${uiElementType} ${divs.length + 1}`,
-          display: "flex",
-          containedElements: [],
-          containerName: "",
-          positionType: "absolute",
-          position: initialPosition,
-          text: `New UI ${uiElementType} ${divs.length + 1}`,
-          size: { width: initialWidthPct, height: initialHeightPct },
-          backgroundColor: "#ffffff",
-          textColor: "#000000",
-          lock: false,
-          flexDirection: "row",
-          justifyContent: "flex-start",
-          alignContent: "center",
-          alignItems: "center",
-          flexWrap: "nowrap",
-          margin: { top: 0, right: 0, bottom: 0, left: 0 },
-          padding: { top: 0, right: 0, bottom: 0, left: 0 },
-        },
-      ]);
-    }
-  };
-
-  const updatePosition = (newPosition: Position) => {
-    if (!selected) return;
-
-    const updateDivs = [...divs];
-
-    if (selected.containerName !== "") {
-      updateDivs.map((div) => {
-        if (div.uuid === selected.containerName) {
-          div.containedElements.map((containedElement) => {
-            if (containedElement.uuid === selected.uuid) {
-              containedElement.position = newPosition;
-            }
-          });
-        } else {
-          div.containedElements
-            .filter(
-              (containedElementLayerTwo) =>
-                containedElementLayerTwo.uiElementType === "container",
-            )
-            .map((containedElementLayerTwo) => {
-              containedElementLayerTwo.containedElements.map(
-                (containedElementLayerThree) => {
-                  if (containedElementLayerThree.uuid === selected.uuid) {
-                    containedElementLayerThree.position = newPosition;
-                  }
-                },
-              );
-            });
-        }
-      });
-      setDivs(updateDivs);
-    }
-
-    updateDivs.map((div) => {
-      if (div.uuid === selected.uuid) {
-        div.position = newPosition;
-      }
-    });
-    setDivs(updateDivs);
-  };
-
-  const updateSize = (newSize: Size) => {
-    if (!selected) return;
-
-    const updateDivs = [...divs];
-
-    if (selected.containerName !== "") {
-      updateDivs.map((div) => {
-        if (div.uuid === selected.containerName) {
-          div.containedElements.map((containedElement) => {
-            if (containedElement.uuid === selected.uuid) {
-              containedElement.size = newSize;
-            }
-          });
-        } else {
-          div.containedElements
-            .filter(
-              (containedElementLayerTwo) =>
-                containedElementLayerTwo.uiElementType === "container",
-            )
-            .map((containedElementLayerTwo) => {
-              containedElementLayerTwo.containedElements.map(
-                (containedElementLayerThree) => {
-                  if (containedElementLayerThree.uuid === selected.uuid) {
-                    containedElementLayerThree.size = newSize;
-                  }
-                },
-              );
-            });
-        }
-      });
-      setDivs(updateDivs);
-    }
-
-    updateDivs.map((div) => {
-      if (div.uuid === selected.uuid) {
-        div.size = newSize;
-      }
-    });
-    setDivs(updateDivs);
-  };
-
-  const updateOnMouseDown = (newMouseDown: string) => {
-    if (!selected) return;
-
-    const updateDivs = [...divs];
-
-    if (selected.containerName !== "") {
-      updateDivs.map((div) => {
-        if (div.uuid === selected.containerName) {
-          div.containedElements.map((containedElement) => {
-            if (containedElement.uuid === selected.uuid) {
-              containedElement.onMouseDown = newMouseDown;
-            }
-          });
-        } else {
-          div.containedElements
-            .filter(
-              (containedElementLayerTwo) =>
-                containedElementLayerTwo.uiElementType === "container",
-            )
-            .map((containedElementLayerTwo) => {
-              containedElementLayerTwo.containedElements.map(
-                (containedElementLayerThree) => {
-                  if (containedElementLayerThree.uuid === selected.uuid) {
-                    containedElementLayerThree.onMouseDown = newMouseDown;
-                  }
-                },
-              );
-            });
-        }
-      });
-      setDivs(updateDivs);
-    }
-
-    updateDivs.map((div) => {
-      if (div.uuid === selected.uuid) {
-        div.onMouseDown = newMouseDown;
-      }
-    });
-    setDivs(updateDivs);
-  };
-
-  const updateActionType = (newActionType: ActionTypes) => {
-    if (!selected) return;
-
-    const updateDivs = [...divs];
-
-    if (selected.containerName !== "") {
-      updateDivs.map((div) => {
-        if (div.uuid === selected.containerName) {
-          div.containedElements.map((containedElement) => {
-            if (containedElement.uuid === selected.uuid) {
-              containedElement.actionType = newActionType;
-            }
-          });
-        } else {
-          div.containedElements
-            .filter(
-              (containedElementLayerTwo) =>
-                containedElementLayerTwo.uiElementType === "container",
-            )
-            .map((containedElementLayerTwo) => {
-              containedElementLayerTwo.containedElements.map(
-                (containedElementLayerThree) => {
-                  if (containedElementLayerThree.uuid === selected.uuid) {
-                    containedElementLayerThree.actionType = newActionType;
-                  }
-                },
-              );
-            });
-        }
-      });
-      setDivs(updateDivs);
-    }
-
-    updateDivs.map((div) => {
-      if (div.uuid === selected.uuid) {
-        div.actionType = newActionType;
-      }
-    });
-    setDivs(updateDivs);
-  };
-
-  const updateActionTypeShow = (newActionTypeShow: {
-    setterDivUuid: string;
-    setterDivName: string;
-    targetDivUuid: string;
-    targetDivName: string;
-    show: boolean;
-  }) => {
-    if (!selected) return;
-
-    const updateDivs = [...divs];
-
-    if (selected.containerName !== "") {
-      updateDivs.map((div) => {
-        if (div.uuid === selected.containerName) {
-          div.containedElements.map((containedElement) => {
-            if (containedElement.uuid === selected.uuid) {
-              containedElement.actionTypeShow = newActionTypeShow;
-            }
-          });
-        } else {
-          div.containedElements
-            .filter(
-              (containedElementLayerTwo) =>
-                containedElementLayerTwo.uiElementType === "container",
-            )
-            .map((containedElementLayerTwo) => {
-              containedElementLayerTwo.containedElements.map(
-                (containedElementLayerThree) => {
-                  if (containedElementLayerThree.uuid === selected.uuid) {
-                    containedElementLayerThree.actionTypeShow =
-                      newActionTypeShow;
-                  }
-                },
-              );
-            });
-        }
-      });
-
-      setDivs(updateDivs);
-    }
-
-    updateDivs.map((div) => {
-      if (div.uuid === newActionTypeShow.targetDivUuid) {
-        div.actionType = "Show/Hide";
-        div.actionTypeShow = newActionTypeShow;
-      }
-    });
-    updateDivs.map((div) => {
-      if (div.uuid === selected.uuid) {
-        div.actionTypeShow = newActionTypeShow;
-      }
-    });
-    setDivs(updateDivs);
-  };
-
-  const updateMargin = (newMargin: PositionTypes) => {
-    if (!selected) return;
-
-    const updateDivs = [...divs];
-
-    if (selected.containerName !== "") {
-      updateDivs.map((div) => {
-        if (div.uuid === selected.containerName) {
-          div.containedElements.map((containedElement) => {
-            if (containedElement.uuid === selected.uuid) {
-              containedElement.margin = newMargin;
-            }
-          });
-        } else {
-          div.containedElements
-            .filter(
-              (containedElementLayerTwo) =>
-                containedElementLayerTwo.uiElementType === "container",
-            )
-            .map((containedElementLayerTwo) => {
-              containedElementLayerTwo.containedElements.map(
-                (containedElementLayerThree) => {
-                  if (containedElementLayerThree.uuid === selected.uuid) {
-                    containedElementLayerThree.margin = newMargin;
-                  }
-                },
-              );
-            });
-        }
-      });
-      setDivs(updateDivs);
-    }
-
-    updateDivs.map((div) => {
-      if (div.uuid === selected.uuid) {
-        div.margin = newMargin;
-      }
-    });
-    setDivs(updateDivs);
-  };
-
-  const updatePadding = (newPadding: PositionTypes) => {
-    if (!selected) return;
-
-    const updateDivs = [...divs];
-
-    if (selected.containerName !== "") {
-      updateDivs.map((div) => {
-        if (div.uuid === selected.containerName) {
-          div.containedElements.map((containedElement) => {
-            if (containedElement.uuid === selected.uuid) {
-              containedElement.padding = newPadding;
-            }
-          });
-        } else {
-          div.containedElements
-            .filter(
-              (containedElementLayerTwo) =>
-                containedElementLayerTwo.uiElementType === "container",
-            )
-            .map((containedElementLayerTwo) => {
-              containedElementLayerTwo.containedElements.map(
-                (containedElementLayerThree) => {
-                  if (containedElementLayerThree.uuid === selected.uuid) {
-                    containedElementLayerThree.padding = newPadding;
-                  }
-                },
-              );
-            });
-        }
-      });
-      setDivs(updateDivs);
-    }
-
-    updateDivs.map((div) => {
-      if (div.uuid === selected.uuid) {
-        div.padding = newPadding;
-      }
-    });
-    setDivs(updateDivs);
-  };
-
-  const updateText = (newText: string) => {
-    if (!selected) return;
-
-    const updateDivs = [...divs];
-
-    if (selected.containerName !== "") {
-      updateDivs.map((div) => {
-        if (div.uuid === selected.containerName) {
-          div.containedElements.map((containedElement) => {
-            if (containedElement.uuid === selected.uuid) {
-              containedElement.text = newText;
-            }
-          });
-        } else {
-          div.containedElements
-            .filter(
-              (containedElementLayerTwo) =>
-                containedElementLayerTwo.uiElementType === "container",
-            )
-            .map((containedElementLayerTwo) => {
-              containedElementLayerTwo.containedElements.map(
-                (containedElementLayerThree) => {
-                  if (containedElementLayerThree.uuid === selected.uuid) {
-                    containedElementLayerThree.text = newText;
-                  }
-                },
-              );
-            });
-        }
-      });
-      setDivs(updateDivs);
-    }
-
-    updateDivs.map((div) => {
-      if (div.uuid === selected.uuid) {
-        div.text = newText;
-      }
-    });
-    setDivs(updateDivs);
-  };
-
-  const updateBackgroundColor = (newBackgroundColor: string) => {
-    if (!selected) return;
-
-    const updateDivs = [...divs];
-
-    if (selected.containerName !== "") {
-      updateDivs.map((div) => {
-        if (div.uuid === selected.containerName) {
-          div.containedElements.map((containedElement) => {
-            if (containedElement.uuid === selected.uuid) {
-              containedElement.backgroundColor = newBackgroundColor;
-            }
-          });
-        } else {
-          div.containedElements
-            .filter(
-              (containedElementLayerTwo) =>
-                containedElementLayerTwo.uiElementType === "container",
-            )
-            .map((containedElementLayerTwo) => {
-              containedElementLayerTwo.containedElements.map(
-                (containedElementLayerThree) => {
-                  if (containedElementLayerThree.uuid === selected.uuid) {
-                    containedElementLayerThree.backgroundColor =
-                      newBackgroundColor;
-                  }
-                },
-              );
-            });
-        }
-      });
-      setDivs(updateDivs);
-    }
-
-    updateDivs.map((div) => {
-      if (div.uuid === selected.uuid) {
-        div.backgroundColor = newBackgroundColor;
-      }
-    });
-    setDivs(updateDivs);
-  };
-
-  const updateTextColor = (newTextColor: string) => {
-    if (!selected) return;
-
-    const updateDivs = [...divs];
-
-    if (selected.containerName !== "") {
-      updateDivs.map((div) => {
-        if (div.uuid === selected.containerName) {
-          div.containedElements.map((containedElement) => {
-            if (containedElement.uuid === selected.uuid) {
-              containedElement.textColor = newTextColor;
-            }
-          });
-        } else {
-          div.containedElements
-            .filter(
-              (containedElementLayerTwo) =>
-                containedElementLayerTwo.uiElementType === "container",
-            )
-            .map((containedElementLayerTwo) => {
-              containedElementLayerTwo.containedElements.map(
-                (containedElementLayerThree) => {
-                  if (containedElementLayerThree.uuid === selected.uuid) {
-                    containedElementLayerThree.textColor = newTextColor;
-                  }
-                },
-              );
-            });
-        }
-      });
-      setDivs(updateDivs);
-    }
-
-    updateDivs.map((div) => {
-      if (div.uuid === selected.uuid) {
-        div.textColor = newTextColor;
-      }
-    });
-    setDivs(updateDivs);
-  };
-
   const handleIncreaseGridSize = () => {
     setGridSize((prevSize) => Math.min(5, prevSize + 1));
     setShowGrid(true);
@@ -743,51 +206,6 @@ const CreateUi = () => {
   const handleDecreaseGridSize = () => {
     setGridSize((prevSize) => Math.max(1, prevSize - 1));
     setShowGrid(true);
-  };
-
-  const handleDelete = () => {
-    if (!selected) return;
-
-    const updatedDivs = divs.map((div) => {
-      if (div.uuid === selected.containerName) {
-        return {
-          ...div,
-          containedElements: div.containedElements.filter(
-            (containedElement) => containedElement.uuid !== selected.uuid,
-          ),
-        };
-      } else {
-        const updatedContainedElements = div.containedElements.map(
-          (containedElementLayerTwo) => {
-            if (containedElementLayerTwo.uiElementType === "container") {
-              return {
-                ...containedElementLayerTwo,
-                containedElements:
-                  containedElementLayerTwo.containedElements.filter(
-                    (containedElementLayerThree) =>
-                      containedElementLayerThree.uuid !== selected.uuid,
-                  ),
-              };
-            }
-            return containedElementLayerTwo;
-          },
-        );
-
-        return {
-          ...div,
-          containedElements: updatedContainedElements,
-        };
-      }
-    });
-
-    if (selected.containerName === "") {
-      const filteredDivs = divs.filter((div) => div.uuid !== selected.uuid);
-      setDivs(filteredDivs);
-    } else {
-      setDivs(updatedDivs);
-    }
-
-    setSelected(null);
   };
 
   const handleSetBackgroundImage = (direction: number) => () => {
@@ -802,71 +220,23 @@ const CreateUi = () => {
     setBgImage(`url(${images[newIndex]})`);
   };
 
-  const handleSetLock = (lock: boolean) => {
-    if (!selected) return;
-
-    const updateDivs = [...divs];
-
-    if (selected.containerName !== "") {
-      updateDivs.map((div) => {
-        if (div.uuid === selected.containerName) {
-          div.containedElements.map((containedElement) => {
-            if (containedElement.uuid === selected.uuid) {
-              containedElement.lock = lock;
-            }
-          });
-        } else {
-          div.containedElements
-            .filter(
-              (containedElementLayerTwo) =>
-                containedElementLayerTwo.uiElementType === "container",
-            )
-            .map((containedElementLayerTwo) => {
-              containedElementLayerTwo.containedElements.map(
-                (containedElementLayerThree) => {
-                  if (containedElementLayerThree.uuid === selected.uuid) {
-                    containedElementLayerThree.lock = lock;
-                  }
-                },
-              );
-            });
-        }
-      });
-      setDivs(updateDivs);
-    }
-
-    updateDivs.map((div) => {
-      if (div.uuid === selected.uuid) {
-        div.lock = lock;
-      }
-    });
-    setDivs(updateDivs);
-  };
-
   return (
     <div className="flex flex-grow flex-col">
       <div className="flex flex-row items-start justify-between ">
         <SideBar
-          divs={divs}
-          selected={selected}
           bgImage={bgImage}
           gridSize={gridSize}
           zoomLevel={zoomLevel}
-          addDiv={addDiv}
           setBgImage={setBgImage}
           handleDecreaseGridSize={handleDecreaseGridSize}
-          handleDivClick={handleDivClick}
           handleIncreaseGridSize={handleIncreaseGridSize}
           handleResetZoomLevel={handleResetZoomLevel}
           handleSetBackgroundImage={handleSetBackgroundImage}
-          handleSetLock={handleSetLock}
           handleSetShowGrid={handleSetShowGrid}
           handleZoomChange={handleZoomChange}
           setBgImageCount={setBgImageCount}
         />
         <Canvas
-          divs={divs}
-          selected={selected}
           targetRef={targetRef}
           bgImage={bgImage}
           cellHeight={cellHeight}
@@ -874,34 +244,9 @@ const CreateUi = () => {
           boundary={boundary}
           gridBackgroundStyle={gridBackgroundStyle}
           zoomLevel={zoomLevel}
-          handleDivClick={handleDivClick}
-          handleResetDivClick={handleResetDivClick}
-          handleSetLock={handleSetLock}
-          setDeleteItem={setDeleteItem}
-          setShowDeleteModal={setShowDeleteModal}
           snapToGrid={snapToGrid}
-          updatePosition={updatePosition}
-          updateSize={updateSize}
-          updateText={updateText}
         />
-        <SelectedEditor
-          divs={divs}
-          selected={selected}
-          handleDelete={handleDelete}
-          handleSetLock={handleSetLock}
-          setDivs={setDivs}
-          updateBackgroundColor={updateBackgroundColor}
-          updateMargin={updateMargin}
-          updatePadding={updatePadding}
-          updatePosition={updatePosition}
-          updateSize={updateSize}
-          updateText={updateText}
-          updateTextColor={updateTextColor}
-          updateOnMouseDown={updateOnMouseDown}
-          updateActionType={updateActionType}
-          updateActionTypeShow={updateActionTypeShow}
-          setSelected={setSelected}
-        />
+        <SelectedEditor />
       </div>
       <div className="absolute top-10 flex h-full flex-col items-center bg-slate-900 px-10 pt-20 text-center sm:hidden">
         <BlockIcon />
@@ -913,12 +258,9 @@ const CreateUi = () => {
         <div className="mt-4">Minimum Requirements</div>
         <div>Screen width: 640px</div>
       </div>
-      {showDeleteModal && (
-        <DeleteModal
-          div={deleteItem}
-          setShowDeleteModal={setShowDeleteModal}
-          onDelete={() => handleDelete()}
-        />
+      {showDeleteModal && <DeleteModal />}
+      {popupText.infoText != "" && (
+        <PopupModal />
       )}
     </div>
   );

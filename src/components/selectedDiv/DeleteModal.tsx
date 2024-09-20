@@ -1,19 +1,11 @@
-import { Div } from "@/pages/CreateUi";
 import React from "react";
 import Button from "../Button";
+import { useUiElement } from "@/context/UiElementContext";
 
-type DeleteModalProps = {
-  div: Div | null;
-  setShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
-  onDelete: () => void;
-};
+export const DeleteModal = () => {
+  const { deleteItem, setShowDeleteModal, handleDelete } = useUiElement();
 
-export const DeleteModal = ({
-  div,
-  setShowDeleteModal,
-  onDelete,
-}: DeleteModalProps) => {
-  if (!div) return null;
+  if (!deleteItem) return null;
 
   const handleInnerClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -29,8 +21,8 @@ export const DeleteModal = ({
         onClick={handleInnerClick}
       >
         <div className="m-5 text-center text-white">
-          <div>Selected UI Element: {div.name}</div>
-          <div>Type: {div.uiElementType}</div>
+          <div>Selected UI Element: {deleteItem.name}</div>
+          <div>Type: {deleteItem.uiElementType}</div>
           <div className="mt-2">
             Are you sure you want to delete this UI Element?
           </div>
@@ -39,7 +31,7 @@ export const DeleteModal = ({
       <div className="flex justify-center">
         <Button
           text="Delete"
-          onClick={onDelete}
+          onClick={handleDelete}
           variant="remove"
           padding="medium"
           className="m-2 rounded-2xl"

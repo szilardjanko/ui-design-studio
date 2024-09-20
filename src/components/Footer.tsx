@@ -12,6 +12,12 @@ export const Footer = () => {
         >
           Github
         </Link>
+        <Link
+          href="/Feedback"
+          className="px-3 py-2 text-white hover:bg-slate-700"
+        >
+          Feedback
+        </Link>
       </div>
       <div className="text-white">DCL UI Design Studio</div>
       <div className="mr-2"></div>
