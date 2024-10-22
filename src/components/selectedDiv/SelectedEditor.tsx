@@ -88,7 +88,10 @@ export const SelectedEditor = () => {
   return (
     <div className="pl-1">
       {selected ? (
-        <div className="flex w-72 select-none flex-col items-start justify-start border-y border-l border-slate-700 bg-slate-800">
+        <div
+          className="flex w-72 select-none flex-col items-start justify-start overflow-y-auto border-y border-l border-slate-700 bg-slate-800"
+          style={{ maxHeight: "90vh" }}
+        >
           <div className="flex w-full items-center justify-between border-b border-slate-500 bg-gradient-to-tl from-slate-600 to-slate-900 py-2 shadow shadow-slate-700">
             <div className="flex flex-col px-4">
               <div className="text-white">Selected UI Element:</div>
@@ -117,12 +120,14 @@ export const SelectedEditor = () => {
             </div>
           </div>
           <DivInfo div={selected} handleSetLock={handleSetLock} />
-          <TextColorControls
-            div={selected}
-            onTextChange={updateText}
-            onBackgroundColorChange={updateBackgroundColor}
-            onTextColorChange={updateTextColor}
-          />
+          {selected.uiElementType !== "social" && (
+            <TextColorControls
+              div={selected}
+              onTextChange={updateText}
+              onBackgroundColorChange={updateBackgroundColor}
+              onTextColorChange={updateTextColor}
+            />
+          )}
           <PositionControls
             div={selected}
             onPositionChange={updatePosition}
@@ -187,10 +192,6 @@ export const SelectedEditor = () => {
           </div>
         </div>
       )}
-
-      <div className="flex flex-col items-end p-2">
-        <button onClick={() => console.log(divs)}>Log Divs</button>
-      </div>
     </div>
   );
 };

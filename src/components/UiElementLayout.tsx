@@ -35,7 +35,9 @@ export const UiElementLayout = ({
     if (div.backgroundImage) {
       return "rgba(0,0,0,0)";
     }
-    return div.backgroundColor || "#ffffff";
+    return div.backgroundColor === ""
+      ? "transparent"
+      : div.backgroundColor || "#ffffff";
   };
 
   return (
@@ -61,8 +63,16 @@ export const UiElementLayout = ({
           ? `url(${div.backgroundImage})`
           : "",
         backgroundColor: getBackgroundColor(div),
+
         backgroundRepeat: "no-repeat",
-        backgroundSize: "contain",
+        backgroundSize:
+          div.hasSprite && div.spriteProperties && div.backgroundImageSize
+            ? `${(div.backgroundImageSize.width / div.spriteProperties.width) * div.size.width}px ${(div.backgroundImageSize.height / div.spriteProperties.height) * div.size.height}px`
+            : "contain",
+        backgroundPosition:
+          div.hasSprite && div.spriteProperties
+            ? `-${(div.spriteProperties.x / div.spriteProperties.width) * div.size.width}px -${(div.spriteProperties.y / div.spriteProperties.height) * div.size.height}px`
+            : "center",
       }}
       onMouseEnter={() => {
         setIsMouseEnter(true);

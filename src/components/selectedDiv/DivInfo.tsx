@@ -29,7 +29,13 @@ export const DivInfo = ({ div, handleSetLock }: DivInfoProps) => {
           {div.uiElementType != "container" &&
             div.uiElementType != "social" && <div>Text: {div.text}</div>}
           {div.backgroundImage ? (
-            <div>Image: {div.backgroundImage}</div>
+            <>
+              <div>Image: {div.backgroundImageFileName}</div>
+              <div>
+                Image Size: w: {div.backgroundImageSize?.width} h:{" "}
+                {div.backgroundImageSize?.height}
+              </div>
+            </>
           ) : (
             <div>Background Color: {div.backgroundColor}</div>
           )}
@@ -55,7 +61,6 @@ export const DivInfo = ({ div, handleSetLock }: DivInfoProps) => {
           >
             Locked: {div.lock ? "True" : "False"}
           </div>
-          {/* {div.actionType && ( */}
           <>
             <div>Action Type: {div.actionType}</div>
             {div.actionType === "Open Link" ? (
@@ -80,7 +85,6 @@ export const DivInfo = ({ div, handleSetLock }: DivInfoProps) => {
               </>
             ) : null}
           </>
-          {/* )} */}
           <div>{div.uuid}</div>
         </div>
       </div>

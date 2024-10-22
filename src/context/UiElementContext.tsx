@@ -8,6 +8,7 @@ import {
   Div,
   PositionTypes,
   PresetTypes,
+  SpritePropertyTypes,
   UiElementTypes,
 } from "@/pages/CreateUi";
 import { createContext, useContext, useState, ReactNode } from "react";
@@ -40,6 +41,14 @@ type UiElementContextValue = {
   updateTextColor: (newTextColor: string) => void;
   handleDelete: () => void;
   handleSetLock: (lock: boolean) => void;
+  updateBackgroundImage: (newImage: {
+    image: string;
+    imageFileName: string;
+    width: number;
+    height: number;
+  }) => void;
+  updateHasSprite: (hasSprite: boolean) => void;
+  updateSpriteProperties: (spriteProperties: SpritePropertyTypes) => void;
 };
 
 type UiElementProviderProps = {
@@ -71,6 +80,9 @@ export const UiElementContext = createContext<UiElementContextValue>({
   updateTextColor: () => {},
   handleDelete: () => {},
   handleSetLock: () => {},
+  updateBackgroundImage: () => {},
+  updateHasSprite: () => {},
+  updateSpriteProperties: () => {},
 });
 
 export const useUiElement = () => {
@@ -124,39 +136,75 @@ export const UiElementProvider: React.FC<UiElementProviderProps> = ({
           backgroundColor: "#ffffff",
           backgroundImage:
             presetType === "instagram"
-              ? `/social/instagram.png`
+              ? `/uiElements/instagram.png`
               : presetType === "instagram_color"
-                ? `/social/instagram_color.png`
+                ? `/uiElements/instagram_color.png`
                 : presetType === "instagram_negative"
-                  ? `/social/instagram_negative.png`
+                  ? `/uiElements/instagram_negative.png`
                   : presetType === "facebook"
-                    ? `/social/facebook.png`
+                    ? `/uiElements/facebook.png`
                     : presetType === "facebook_black"
-                      ? `/social/facebook_black.png`
+                      ? `/uiElements/facebook_black.png`
                       : presetType === "facebook_negative"
-                        ? `/social/facebook_negative.png`
+                        ? `/uiElements/facebook_negative.png`
                         : presetType === "twitter"
-                          ? `/social/twitter.png`
+                          ? `/uiElements/twitter.png`
                           : presetType === "twitter_negative"
-                            ? `/social/twitter_negative.png`
+                            ? `/uiElements/twitter_negative.png`
                             : presetType === "youtube"
-                              ? `/social/youtube.png`
+                              ? `/uiElements/youtube.png`
                               : presetType === "youtube_negative"
-                                ? `/social/youtube_negative.png`
+                                ? `/uiElements/youtube_negative.png`
                                 : presetType === "discord"
-                                  ? `/social/discord.png`
+                                  ? `/uiElements/discord.png`
                                   : presetType === "discord_negative"
                                     ? `/social/discord_negative.png`
                                     : presetType === "github"
                                       ? `/social/github.png`
                                       : presetType === "github_negative"
-                                        ? `/social/github_negative.png`
+                                        ? `/uiElements/github_negative.png`
                                         : presetType === "lens"
-                                          ? `/social/lens.png`
+                                          ? `/uiElements/lens.png`
                                           : presetType === "lens_black"
-                                            ? `/social/lens_black.png`
+                                            ? `/uiElements/lens_black.png`
                                             : presetType === "lens_green"
-                                              ? `/social/lens_green.png`
+                                              ? `/uiElements/lens_green.png`
+                                              : "",
+          backgroundImageFileName:
+            presetType === "instagram"
+              ? "instagram.png"
+              : presetType === "instagram_color"
+                ? "instagram_color.png"
+                : presetType === "instagram_negative"
+                  ? "instagram_negative.png"
+                  : presetType === "facebook"
+                    ? "facebook.png"
+                    : presetType === "facebook_black"
+                      ? "facebook_black.png"
+                      : presetType === "facebook_negative"
+                        ? "facebook_negative.png"
+                        : presetType === "twitter"
+                          ? "twitter.png"
+                          : presetType === "twitter_negative"
+                            ? "twitter_negative.png"
+                            : presetType === "youtube"
+                              ? "youtube.png"
+                              : presetType === "youtube_negative"
+                                ? "youtube_negative.png"
+                                : presetType === "discord"
+                                  ? "discord.png"
+                                  : presetType === "discord_negative"
+                                    ? "discord_negative.png"
+                                    : presetType === "github"
+                                      ? "github.png"
+                                      : presetType === "github_negative"
+                                        ? "github_negative.png"
+                                        : presetType === "lens"
+                                          ? "lens.png"
+                                          : presetType === "lens_black"
+                                            ? "lens_black.png"
+                                            : presetType === "lens_green"
+                                              ? "lens_green.png"
                                               : "",
           onMouseDown: "",
           actionType: "Open Link",
@@ -280,6 +328,88 @@ export const UiElementProvider: React.FC<UiElementProviderProps> = ({
         div.size = newSize;
       }
     });
+    setDivs(updateDivs);
+  };
+
+  const updateBackgroundImage = (newImage: {
+    image: string;
+    imageFileName: string;
+    width: number;
+    height: number;
+  }) => {
+    if (!selected) return;
+
+    const updateDivs = [...divs];
+
+    const updateElement = (element: Div) => {
+      if (element.uuid === selected.uuid) {
+        element.backgroundImage = newImage.image;
+        element.backgroundImageFileName = newImage.imageFileName;
+        element.backgroundImageSize = {
+          width: newImage.width,
+          height: newImage.height,
+        };
+      }
+
+      if (element.uiElementType === "container") {
+        element.containedElements.forEach((containedElement) => {
+          updateElement(containedElement);
+        });
+      }
+    };
+
+    updateDivs.forEach((div) => {
+      updateElement(div);
+    });
+
+    setDivs(updateDivs);
+  };
+
+  const updateHasSprite = (hasSprite: boolean) => {
+    if (!selected) return;
+
+    const updateDivs = [...divs];
+
+    const updateElement = (element: Div) => {
+      if (element.uuid === selected.uuid) {
+        element.hasSprite = hasSprite;
+      }
+
+      if (element.uiElementType === "container") {
+        element.containedElements.forEach((containedElement) => {
+          updateElement(containedElement);
+        });
+      }
+    };
+
+    updateDivs.forEach((div) => {
+      updateElement(div);
+    });
+
+    setDivs(updateDivs);
+  };
+
+  const updateSpriteProperties = (spriteProperties: SpritePropertyTypes) => {
+    if (!selected) return;
+
+    const updateDivs = [...divs];
+
+    const updateElement = (element: Div) => {
+      if (element.uuid === selected.uuid) {
+        element.spriteProperties = spriteProperties;
+      }
+
+      if (element.uiElementType === "container") {
+        element.containedElements.forEach((containedElement) => {
+          updateElement(containedElement);
+        });
+      }
+    };
+
+    updateDivs.forEach((div) => {
+      updateElement(div);
+    });
+
     setDivs(updateDivs);
   };
 
@@ -795,6 +925,9 @@ export const UiElementProvider: React.FC<UiElementProviderProps> = ({
         updateTextColor,
         handleDelete,
         handleSetLock,
+        updateBackgroundImage,
+        updateHasSprite,
+        updateSpriteProperties,
       }}
     >
       {children}

@@ -16,19 +16,19 @@ type SocialImage = {
 const socialImages: SocialImage[][] = [
   [
     {
-      src: "/social/instagram_color.png",
+      src: "/uiElements/instagram_color.png",
       alt: "Instagram",
       preset: "instagram_color",
       bgColor: "bg-white",
     },
     {
-      src: "/social/instagram.png",
+      src: "/uiElements/instagram.png",
       alt: "Instagram",
       preset: "instagram",
       bgColor: "bg-white",
     },
     {
-      src: "/social/instagram_negative.png",
+      src: "/uiElements/instagram_negative.png",
       alt: "Instagram",
       preset: "instagram_negative",
       bgColor: "bg-black",
@@ -36,19 +36,19 @@ const socialImages: SocialImage[][] = [
   ],
   [
     {
-      src: "/social/facebook.png",
+      src: "/uiElements/facebook.png",
       alt: "Facebook",
       preset: "facebook",
       bgColor: "bg-white",
     },
     {
-      src: "/social/facebook_black.png",
+      src: "/uiElements/facebook_black.png",
       alt: "Facebook",
       preset: "facebook_black",
       bgColor: "bg-white",
     },
     {
-      src: "/social/facebook_negative.png",
+      src: "/uiElements/facebook_negative.png",
       alt: "Facebook",
       preset: "facebook_negative",
       bgColor: "bg-black",
@@ -56,13 +56,13 @@ const socialImages: SocialImage[][] = [
   ],
   [
     {
-      src: "/social/twitter.png",
+      src: "/uiElements/twitter.png",
       alt: "Twitter",
       preset: "twitter",
       bgColor: "bg-white",
     },
     {
-      src: "/social/twitter_negative.png",
+      src: "/uiElements/twitter_negative.png",
       alt: "Twitter",
       preset: "twitter_negative",
       bgColor: "bg-black",
@@ -70,13 +70,13 @@ const socialImages: SocialImage[][] = [
   ],
   [
     {
-      src: "/social/youtube.png",
+      src: "/uiElements/youtube.png",
       alt: "Youtube",
       preset: "youtube",
       bgColor: "bg-white",
     },
     {
-      src: "/social/youtube_negative.png",
+      src: "/uiElements/youtube_negative.png",
       alt: "Youtube",
       preset: "youtube_negative",
       bgColor: "bg-black",
@@ -84,13 +84,13 @@ const socialImages: SocialImage[][] = [
   ],
   [
     {
-      src: "/social/discord.png",
+      src: "/uiElements/discord.png",
       alt: "Discord",
       preset: "discord",
       bgColor: "bg-white",
     },
     {
-      src: "/social/discord_negative.png",
+      src: "/uiElements/discord_negative.png",
       alt: "Discord",
       preset: "discord_negative",
       bgColor: "bg-black",
@@ -98,13 +98,13 @@ const socialImages: SocialImage[][] = [
   ],
   [
     {
-      src: "/social/github.png",
+      src: "/uiElements/github.png",
       alt: "Github",
       preset: "github",
       bgColor: "bg-white",
     },
     {
-      src: "/social/github_negative.png",
+      src: "/uiElements/github_negative.png",
       alt: "Github",
       preset: "github_negative",
       bgColor: "bg-black",
@@ -112,19 +112,19 @@ const socialImages: SocialImage[][] = [
   ],
   [
     {
-      src: "/social/lens.png",
+      src: "/uiElements/lens.png",
       alt: "Lens",
       preset: "lens",
       bgColor: "bg-black",
     },
     {
-      src: "/social/lens_green.png",
+      src: "/uiElements/lens_green.png",
       alt: "Lens",
       preset: "lens_green",
       bgColor: "bg-black",
     },
     {
-      src: "/social/lens_black.png",
+      src: "/uiElements/lens_black.png",
       alt: "Lens",
       preset: "lens_black",
       bgColor: "bg-white",

@@ -1,14 +1,36 @@
-import { Div } from "@/pages/CreateUi";
+import { Div, SpritePropertyTypes } from "@/pages/CreateUi";
 import React, { useState } from "react";
 import Button from "../Button";
+import { Code } from "../icons/File";
+import { ImageInstructions } from "./ImageInstructions";
 
 type UiCodeProps = {
   divs: Div[];
 };
 
+type Coords = { x: number; y: number };
+
 export const UiCode = ({ divs }: UiCodeProps) => {
   const [openUiCode, setOpenUiCode] = useState(false);
   const [copyCodeText, setCopyCodeText] = useState("Copy Code");
+  const [showImageInstructions, setShowImageInstructions] = useState(false);
+
+  const checkForImageFile = (divs: Div[]): boolean => {
+    for (const div of divs) {
+      if (div.backgroundImage) {
+        return true;
+      }
+      if (
+        div.uiElementType === "container" &&
+        checkForImageFile(div.containedElements)
+      ) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const hasImageFile = checkForImageFile(divs);
 
   const screenWidth = 1248;
   const screenHeight = 702;
@@ -47,7 +69,6 @@ export const UiCode = ({ divs }: UiCodeProps) => {
 
   const createUiElement = (div: Div): string => {
     const uiTransform = createUiTransform(div);
-    const backgroundColor = `Color4.fromHexString('${div.backgroundColor}')`;
     const textColor = `Color4.fromHexString('${div.textColor}')`;
 
     switch (div.uiElementType) {
@@ -58,17 +79,17 @@ export const UiCode = ({ divs }: UiCodeProps) => {
       fontSize={18}
       color={${textColor}}
       uiTransform={{${uiTransform}}}
-      uiBackground={{ color: ${backgroundColor} }}
+      ${handleBackground(div)}
     />`;
       case "button":
         return `
     <Button
       value="${div.text}"
-      variant="primary"
+      variant="${div.backgroundImage ? "secondary" : "primary"}"
       fontSize={18}
       color={${textColor}}
       uiTransform={{${uiTransform}}}
-      uiBackground={{ color: ${backgroundColor} }}
+      ${handleBackground(div)}
       onMouseDown={() => ${handleOnMouseDownType(div)}}
     />`;
       case "input":
@@ -79,7 +100,7 @@ export const UiCode = ({ divs }: UiCodeProps) => {
       placeholderColor={${textColor}}
       color={${textColor}}
       uiTransform={{${uiTransform}}}
-      uiBackground={{ color: ${backgroundColor} }}
+      ${handleBackground(div)}
       onSubmit={(value) => console.log('submitted value: ' + value)}
     />`;
       case "container":
@@ -100,7 +121,7 @@ export const UiCode = ({ divs }: UiCodeProps) => {
         width: '${div.size.width.toFixed(2)}px',
         height: '${div.size.height.toFixed(2)}px'
         }} 
-      uiBackground={{ color: ${backgroundColor} }}
+      ${handleBackground(div)}
     >
     ${handleNestedUiElements(div)}
     </UiEntity>`;
@@ -120,6 +141,59 @@ export const UiCode = ({ divs }: UiCodeProps) => {
     />`;
       default:
         return "";
+    }
+  };
+
+  const getUvs = (
+    sprite: SpritePropertyTypes | undefined,
+    div: Div,
+  ): number[] => {
+    if (sprite !== undefined && div.backgroundImageSize !== undefined) {
+      const A: Coords = {
+        x: sprite.x / div.backgroundImageSize?.width,
+        y: 1 - (sprite.y + sprite.height) / div.backgroundImageSize?.height,
+      };
+      const B: Coords = {
+        x: sprite.x / div.backgroundImageSize?.width,
+        y: 1 - sprite.y / div.backgroundImageSize?.height,
+      };
+      const C: Coords = {
+        x: (sprite.x + sprite.width) / div.backgroundImageSize?.width,
+        y: 1 - sprite.y / div.backgroundImageSize?.height,
+      };
+      const D: Coords = {
+        x: (sprite.x + sprite.width) / div.backgroundImageSize?.width,
+        y: 1 - (sprite.y + sprite.height) / div.backgroundImageSize?.height,
+      };
+
+      const finalUvs: number[] = [A.x, A.y, B.x, B.y, C.x, C.y, D.x, D.y];
+      return finalUvs;
+    }
+    return [];
+  };
+
+  const handleBackground = (div: Div) => {
+    if (div.hasSprite) {
+      return `uiBackground={{
+        textureMode: 'stretch',
+        uvs: [${getUvs(div.spriteProperties, div)}],
+        texture: {
+          src: 'images/uiElements/${div.backgroundImageFileName}'
+        }
+      }}`;
+    } else if (div.backgroundColor === "") {
+      return "";
+    } else {
+      const backgroundColor = `Color4.fromHexString('${div.backgroundColor}')`;
+
+      return div.backgroundImage
+        ? `uiBackground={{
+          textureMode: 'stretch',
+          texture: {
+            src: 'images/uiElements/${div.backgroundImageFileName}'
+          }
+        }}`
+        : `uiBackground={{ color: ${backgroundColor} }}`;
     }
   };
 
@@ -264,41 +338,70 @@ const uiComponent = () => (
 
   return (
     <div>
-      <Button text={"Open Ui Code"} onClick={() => setOpenUiCode(true)} />
+      <Button
+        text={"UI Code"}
+        icon={<Code />}
+        padding="small"
+        textAlign="left"
+        variant="neutral"
+        onClick={() => setOpenUiCode(true)}
+      />
       {openUiCode && (
-        <div
-          className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-75"
-          onClick={() => setOpenUiCode(false)}
-        >
+        <div className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-black bg-opacity-75 backdrop-blur">
           <div
             className="flex flex-col items-center rounded-lg border border-slate-400 bg-black p-2"
             onClick={handleInnerClick}
           >
-            <div className="h-[30rem] overflow-y-auto">
-              <div className="mx-6 mt-4 select-text text-left text-sm text-white">
-                <pre>{codeSnippet}</pre>
+            {showImageInstructions ? (
+              <div className="h-[30rem] max-w-5xl overflow-y-auto">
+                <ImageInstructions divs={divs} />
               </div>
-            </div>
-            <div className="mt-2 flex w-full flex-col items-center border-t border-slate-400 pt-2">
+            ) : (
+              <div className="h-[30rem] max-w-5xl overflow-y-auto">
+                <div className="mx-6 mt-4 select-text text-left text-sm text-white">
+                  <pre className="whitespace-pre-wrap">{codeSnippet}</pre>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="mt-2 flex w-full flex-row items-center justify-center pt-2">
+            {showImageInstructions ? (
               <Button
                 className="mx-2 my-1 w-40 rounded-xl text-center"
-                text={copyCodeText}
-                variant="copy"
-                onClick={() => {
-                  navigator.clipboard.writeText(codeSnippet);
-                  setCopyCodeText("Code Copied");
-                  setTimeout(() => {
-                    setCopyCodeText("Copy Code");
-                  }, 2000);
-                }}
-              />
-              <Button
-                className="mx-2 my-1 w-40 rounded-xl text-center"
-                text={"Close"}
+                text={"Back"}
                 variant="remove"
-                onClick={() => setOpenUiCode(false)}
+                onClick={() => setShowImageInstructions(false)}
               />
-            </div>
+            ) : (
+              <>
+                <Button
+                  className="mx-2 my-1 w-40 rounded-xl text-center"
+                  text={copyCodeText}
+                  variant="copy"
+                  onClick={() => {
+                    navigator.clipboard.writeText(codeSnippet);
+                    setCopyCodeText("Code Copied");
+                    setTimeout(() => {
+                      setCopyCodeText("Copy Code");
+                    }, 2000);
+                  }}
+                />
+                {hasImageFile && (
+                  <Button
+                    text="Image Instructions"
+                    variant="copy"
+                    className="mx-2 my-1 w-40 whitespace-nowrap rounded-xl text-center"
+                    onClick={() => setShowImageInstructions(true)}
+                  />
+                )}
+                <Button
+                  className="mx-2 my-1 w-40 rounded-xl text-center"
+                  text={"Close"}
+                  variant="remove"
+                  onClick={() => setOpenUiCode(false)}
+                />
+              </>
+            )}
           </div>
         </div>
       )}

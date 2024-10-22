@@ -40,7 +40,10 @@ export const Canvas = ({
   } = useUiElement();
 
   return (
-    <div className="overflow-auto" style={{ width: "100vw" }}>
+    <div
+      className="overflow-auto"
+      style={{ width: "100vw", maxHeight: "90vh" }}
+    >
       <div
         style={{
           width: `${1248 * zoomLevel}px`,
@@ -58,7 +61,7 @@ export const Canvas = ({
             height: `702px`,
             backgroundColor: bgImage ? undefined : "#ffffff",
           }}
-          onClick={(e) => {
+          onMouseDown={(e) => {
             if (!(e.target as HTMLElement).closest(".ui-element")) {
               handleResetDivClick();
             }

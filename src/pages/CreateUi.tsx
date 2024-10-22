@@ -28,6 +28,13 @@ export type PositionTypes = {
   left: number;
 };
 
+export type SpritePropertyTypes = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
 export type Div = {
   uuid: string;
   uiElementType: UiElementTypes;
@@ -50,6 +57,10 @@ export type Div = {
   margin: PositionTypes;
   padding: PositionTypes;
   backgroundImage?: string;
+  backgroundImageSize?: { width: number; height: number };
+  hasSprite?: boolean;
+  spriteProperties?: SpritePropertyTypes;
+  backgroundImageFileName?: string;
   onMouseDown?: string;
   actionType: ActionTypes;
   actionTypeShow?: ActionTypeShow;
@@ -259,9 +270,7 @@ const CreateUi = () => {
         <div>Screen width: 640px</div>
       </div>
       {showDeleteModal && <DeleteModal />}
-      {popupText.infoText != "" && (
-        <PopupModal />
-      )}
+      {popupText.infoText != "" && <PopupModal />}
     </div>
   );
 };

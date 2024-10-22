@@ -20,7 +20,7 @@ type PaddingMarginControlProps = {
   setPadding: React.Dispatch<React.SetStateAction<PositionStringTypes>>;
 };
 
-const LabeledNumberInput = ({
+export const LabeledNumberInput = ({
   label,
   id,
   value,
