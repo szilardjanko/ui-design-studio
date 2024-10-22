@@ -102,7 +102,7 @@ export const SideBar = ({
           }}
         />
       </div>
-      <div className="mt-2 border-t pt-2">
+      <div className="my-2 border-t py-2">
         <UiCode divs={divs} />
       </div>
     </div>
