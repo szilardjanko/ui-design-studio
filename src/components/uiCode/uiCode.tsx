@@ -44,6 +44,21 @@ export const UiCode = ({ divs }: UiCodeProps) => {
   const positionYbottom = (div: Div) =>
     ((100 - (div.position.y + heightPercent(div))) * screenHeight) / 100;
 
+  const createPaddingMargin = (div: Div) => {
+    return `padding: {
+          left: '${div.padding.left.toFixed(2)}px',
+          right: '${div.padding.right.toFixed(2)}px',
+          top: '${div.padding.top.toFixed(2)}px',
+          bottom: '${div.padding.bottom.toFixed(2)}px',
+        },
+        margin: {
+          left: '${div.margin.left.toFixed(2)}px',
+          right: '${div.margin.right.toFixed(2)}px',
+          top: '${div.margin.top.toFixed(2)}px',
+          bottom: '${div.margin.bottom.toFixed(2)}px',
+        },`;
+  };
+
   const createUiTransform = (div: Div) => {
     const posX = div.containerName
       ? div.position.x
@@ -62,6 +77,7 @@ export const UiCode = ({ divs }: UiCodeProps) => {
           ${div.position.x + widthPercent(div) / 2 < 50 ? "left" : "right"}: '${posX.toFixed(2)}px',
           ${div.position.y + heightPercent(div) / 2 < 50 ? "top" : "bottom"}: '${posY.toFixed(2)}px',
         },
+        ${createPaddingMargin(div)}
         width: '${div.size.width.toFixed(2)}px',
         height: '${div.size.height.toFixed(2)}px'
       `;
@@ -118,6 +134,7 @@ export const UiCode = ({ divs }: UiCodeProps) => {
           right: '${div.containerName !== "" ? div.position.x : positionXright(div).toFixed(2)}px', 
           bottom: '${div.containerName !== "" ? div.position.y : positionYbottom(div).toFixed(2)}px'
         }, 
+        ${createPaddingMargin(div)}
         width: '${div.size.width.toFixed(2)}px',
         height: '${div.size.height.toFixed(2)}px'
         }} 
