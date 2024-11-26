@@ -153,21 +153,23 @@ const createImageElement = (
 
 export const Social = ({ addDiv }: SocialProps) => {
   return (
-    <div className="mt-2 flex max-h-48 flex-col overflow-y-auto border-t border-slate-300 pt-2">
-      {socialImages.map((imageRow, rowIndex) => (
-        <div key={rowIndex} className="my-2 flex justify-center">
-          {imageRow.map((image, index) =>
-            createImageElement(
-              image.src,
-              image.alt,
-              image.preset,
-              image.bgColor,
-              addDiv,
-              `${rowIndex}-${index}`,
-            ),
-          )}
-        </div>
-      ))}
+    <div className="mt-2 flex max-h-48 flex-col border-t border-slate-500 pt-2">
+      <div className="overflow-y-auto">
+        {socialImages.map((imageRow, rowIndex) => (
+          <div key={rowIndex} className="my-2 flex justify-center">
+            {imageRow.map((image, index) =>
+              createImageElement(
+                image.src,
+                image.alt,
+                image.preset,
+                image.bgColor,
+                addDiv,
+                `${rowIndex}-${index}`,
+              ),
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

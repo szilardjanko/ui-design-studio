@@ -12,7 +12,7 @@ import {
 } from "@/components/selectedDiv/ClickActions";
 import { useUiElement } from "@/context/UiElementContext";
 import { useSideBar } from "@/context/SideBarContext";
-import { PopupModal } from "@/components/PopupModal";
+import { PopupModal } from "@/components/popup/PopupModal";
 
 export type UiElementTypes =
   | "container"
@@ -116,8 +116,15 @@ const CreateUi = () => {
     bottom: 0,
     right: 0,
   });
-  const [gridSize, setGridSize] = useState(3);
-  const [showGrid, setShowGrid] = useState(true);
+  const {
+    showDeleteModal,
+    gridSize,
+    showGrid,
+    setShowGrid,
+    setGridSize,
+    safeZone,
+    setSafeZone,
+  } = useUiElement();
   const gridCols = 16 * gridSize;
   const gridRows = 9 * gridSize;
   const [cellWidth, setCellWidth] = useState(0);
@@ -126,7 +133,6 @@ const CreateUi = () => {
   const [bgImage, setBgImage] = useState(`url(dclBgDay.png)`);
   const [bgImageCount, setBgImageCount] = useState(0);
 
-  const { showDeleteModal } = useUiElement();
   const { popupText } = useSideBar();
 
   const calculateZoomLevel = (windowWidth: number) => {
@@ -145,7 +151,7 @@ const CreateUi = () => {
   };
 
   const handleResetZoomLevel = () => {
-    const initialZoomLevel = calculateZoomLevel(window.innerWidth);
+    const initialZoomLevel = calculateZoomLevel(window.innerWidth - 1);
     setZoomLevel(initialZoomLevel);
   };
 
@@ -246,6 +252,8 @@ const CreateUi = () => {
           handleSetShowGrid={handleSetShowGrid}
           handleZoomChange={handleZoomChange}
           setBgImageCount={setBgImageCount}
+          safeZone={safeZone}
+          setSafeZone={setSafeZone}
         />
         <Canvas
           targetRef={targetRef}
@@ -256,6 +264,7 @@ const CreateUi = () => {
           gridBackgroundStyle={gridBackgroundStyle}
           zoomLevel={zoomLevel}
           snapToGrid={snapToGrid}
+          safeZone={safeZone}
         />
         <SelectedEditor />
       </div>

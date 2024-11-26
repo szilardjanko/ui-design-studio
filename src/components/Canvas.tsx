@@ -14,6 +14,7 @@ type CanvasProps = {
   cellHeight: number;
   zoomLevel: number;
   targetRef: React.RefObject<HTMLDivElement>;
+  safeZone: boolean;
 };
 
 export const Canvas = ({
@@ -25,6 +26,7 @@ export const Canvas = ({
   cellHeight,
   zoomLevel,
   targetRef,
+  safeZone,
 }: CanvasProps) => {
   const {
     divs,
@@ -37,6 +39,7 @@ export const Canvas = ({
     updatePosition,
     updateSize,
     updateText,
+    handleDuplicate,
   } = useUiElement();
 
   return (
@@ -91,6 +94,27 @@ export const Canvas = ({
               ...gridBackgroundStyle,
             }}
           />
+          {/* Safe Zone */}
+          <div
+            style={{
+              display: safeZone ? "flex" : "none",
+              position: "absolute",
+              top: 0,
+              left: 0,
+              backgroundColor: "rgba(255, 0, 0, 0.25)",
+              width: "25%",
+              height: "100%",
+              zIndex: 1,
+              color: "#ffffff",
+              fontSize: "24px",
+              fontWeight: "bold",
+              textAlign: "center",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            Decentraland UI <br /> 25%
+          </div>
           {divs.map((div, index) => (
             <UiElement
               key={index}
@@ -136,6 +160,8 @@ export const Canvas = ({
               updateText={updateText}
               actionType={div.actionType}
               actionTypeCount={div.actionTypeCount}
+              handleDuplicate={handleDuplicate}
+              safeZone={safeZone}
             />
           ))}
         </div>

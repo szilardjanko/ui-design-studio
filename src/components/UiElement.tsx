@@ -65,6 +65,8 @@ type UiElementProps = {
   actionType: ActionTypes;
   actionTypeShow?: ActionTypeShow;
   actionTypeCount?: ActionTypeCount;
+  handleDuplicate: (div: Div) => void;
+  safeZone: boolean;
 };
 
 export const UiElement = ({
@@ -102,6 +104,8 @@ export const UiElement = ({
   actionType,
   actionTypeShow,
   actionTypeCount,
+  handleDuplicate,
+  safeZone,
 }: UiElementProps) => {
   const [isMouseEnter, setIsMouseEnter] = useState(false);
 
@@ -136,7 +140,7 @@ export const UiElement = ({
         ((moveEvent.clientY - rect.top) / rect.height) * 100 - startPosition.y;
 
       const constrainedX = Math.max(
-        0,
+        safeZone ? 25 : 0,
         Math.min(
           newPosX,
           100 - (size.width / targetRef.current.offsetWidth) * 100,
@@ -235,6 +239,7 @@ export const UiElement = ({
       handleSetLock={handleSetLock}
       setDeleteItem={setDeleteItem}
       setShowDeleteModal={setShowDeleteModal}
+      handleDuplicate={handleDuplicate}
     >
       {uiElementType === "input" ? (
         <input
@@ -269,6 +274,8 @@ export const UiElement = ({
           handleDivSetLock={handleDivSetLock}
           divs={divs}
           onSelect={onSelect}
+          handleDuplicate={handleDuplicate}
+          safeZone={safeZone}
         />
       ) : (
         <div className="flex h-full w-full items-center justify-center">

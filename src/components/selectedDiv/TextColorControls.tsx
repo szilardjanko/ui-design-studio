@@ -153,7 +153,7 @@ export const TextColorControls = ({
             />
             <label
               htmlFor="transparent"
-              className="mx-auto mb-2 mt-1 cursor-pointer"
+              className="mt-1 mb-2 cursor-pointer mx-auto"
             >
               Transparent: &nbsp;
               <input

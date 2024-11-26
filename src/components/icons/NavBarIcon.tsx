@@ -52,7 +52,7 @@ export const NavBarIcon = () => {
         ref={firstRef}
         style={{
           position: "absolute",
-          left: "13.5rem",
+          left: "19rem",
           top: "3px",
           width: "36px",
           height: "36px",

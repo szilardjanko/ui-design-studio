@@ -15,7 +15,7 @@ export const DownloadImages = ({
   return (
     <div className="flex flex-col items-center">
       <div className="mb-2 text-lg">Download Images</div>
-      <div className="flex flex-wrap items-center justify-center gap-4 rounded-md border border-slate-500 bg-slate-800 px-1 py-2">
+      <div className="flex flex-wrap items-end justify-center gap-4 rounded-md border border-slate-500 bg-slate-800 px-4 py-2">
         {Array.from(socialImages).map((image, index) => (
           <div key={index} className="flex flex-col items-center p-1">
             <a

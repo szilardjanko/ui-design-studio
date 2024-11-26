@@ -1,13 +1,30 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import Button from "../Button";
 import { useUiElement } from "@/context/UiElementContext";
 import { Div } from "@/pages/CreateUi";
 import { useSideBar } from "@/context/SideBarContext";
+import { useAuth } from "@/context/AuthContext";
+import { Download, File, Login, New, Open, Save, SignUp } from "../icons/File";
 
 export const SaveLoad = () => {
   const [showOptions, setShowOptions] = useState(false);
   const { divs, setDivs } = useUiElement();
   const { setPopupText } = useSideBar();
+  const { user } = useAuth();
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowOptions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const downloadFile = (data: string, filename: string): void => {
     const file = new Blob([data], { type: "application/json" });
@@ -73,9 +90,17 @@ export const SaveLoad = () => {
     );
   };
 
-  const handleSave = (): void => {
+  const handleDownload = (): void => {
     const data = JSON.stringify(divs, null, 2);
     downloadFile(data, "UiDesignStudio.json");
+  };
+
+  const handleSave = () => {
+    setPopupText({
+      infoText: "Are you sure you want to save your design?",
+      buttonText: "Save",
+      handleConfirm: "save",
+    });
   };
 
   const handleLoad = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -124,6 +149,15 @@ export const SaveLoad = () => {
     }
   };
 
+  const handleOpen = () => {
+    setPopupText({
+      infoText:
+        "Would you like to open a saved design from your account or local storage?",
+      buttonText: "Open",
+      handleConfirm: "open",
+    });
+  };
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.altKey) {
@@ -164,38 +198,86 @@ export const SaveLoad = () => {
     <div className="flex flex-col">
       <Button
         text="File"
-        className="my-0.5"
+        icon={<File />}
+        textAlign="left"
         onClick={() => setShowOptions(!showOptions)}
       />
       {showOptions && (
-        <div className="flex w-full flex-col justify-around">
-          <Button
-            text="New"
-            className="my-0.5"
-            onClick={() => {
-              setPopupText({
-                infoText: "Are you sure you want to start a new design?",
-                buttonText: "New",
-                handleConfirm: "new",
-              });
-              setShowOptions(false);
-            }}
-          />
-          <Button
-            text="Open"
-            className="my-0.5"
-            onClick={() =>
-              document.querySelector<HTMLInputElement>("#fileInput")?.click()
-            }
-          />
-          <Button
-            text="Save"
-            className="my-0.5"
-            onClick={() => {
-              handleSave();
-              setShowOptions(false);
-            }}
-          />
+        <div className="fixed left-1 top-12 z-10 flex h-[90vh] w-44 select-none flex-col items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm">
+          <div
+            className="absolute left-0 top-0 flex w-44 px-1 flex-col gap-1 bg-gradient-to-bl from-slate-800 to-black shadow-lg"
+            ref={menuRef}
+          >
+            {!user && (
+              <>
+                <Button
+                  text="Sign Up"
+                  icon={<SignUp />}
+                  textAlign="left"
+                  onClick={() => {
+                    setPopupText({
+                      infoText: "Sign up to save your design",
+                      buttonText: "Sign Up",
+                      handleConfirm: "signup",
+                    });
+                    setShowOptions(false);
+                  }}
+                />
+                <Button
+                  text="Login"
+                  icon={<Login />}
+                  textAlign="left"
+                  onClick={() => {
+                    setPopupText({
+                      infoText: "Login to save your design",
+                      buttonText: "Login",
+                      handleConfirm: "login",
+                    });
+                    setShowOptions(false);
+                  }}
+                />
+              </>
+            )}
+            {user && (
+              <Button
+                text="Save"
+                icon={<Save />}
+                textAlign="left"
+                onClick={() => {
+                  handleSave();
+                  setShowOptions(false);
+                }}
+              />
+            )}
+            <Button
+              text="New"
+              icon={<New />}
+              textAlign="left"
+              onClick={() => {
+                setPopupText({
+                  infoText: "Are you sure you want to start a new design?",
+                  buttonText: "New",
+                  handleConfirm: "new",
+                });
+                setShowOptions(false);
+              }}
+            />
+            <Button
+              text="Open"
+              icon={<Open />}
+              textAlign="left"
+              onClick={() => handleOpen()}
+            />
+            <Button
+              text="Download"
+              icon={<Download />}
+              textAlign="left"
+              onClick={() => {
+                handleDownload();
+                setShowOptions(false);
+              }}
+            />
+          </div>
         </div>
       )}
       <input

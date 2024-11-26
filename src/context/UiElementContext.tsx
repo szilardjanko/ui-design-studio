@@ -49,6 +49,13 @@ type UiElementContextValue = {
   }) => void;
   updateHasSprite: (hasSprite: boolean) => void;
   updateSpriteProperties: (spriteProperties: SpritePropertyTypes) => void;
+  handleDuplicate: (div: Div) => void;
+  gridSize: number;
+  setGridSize: React.Dispatch<React.SetStateAction<number>>;
+  showGrid: boolean;
+  setShowGrid: React.Dispatch<React.SetStateAction<boolean>>;
+  safeZone: boolean;
+  setSafeZone: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type UiElementProviderProps = {
@@ -83,6 +90,13 @@ export const UiElementContext = createContext<UiElementContextValue>({
   updateBackgroundImage: () => {},
   updateHasSprite: () => {},
   updateSpriteProperties: () => {},
+  handleDuplicate: () => {},
+  gridSize: 3,
+  setGridSize: () => {},
+  showGrid: true,
+  setShowGrid: () => {},
+  safeZone: false,
+  setSafeZone: () => {},
 });
 
 export const useUiElement = () => {
@@ -97,12 +111,15 @@ export const UiElementProvider: React.FC<UiElementProviderProps> = ({
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteItem, setDeleteItem] = useState<Div | null>(null);
 
+  const [gridSize, setGridSize] = useState(3);
+  const [showGrid, setShowGrid] = useState(true);
+  const [safeZone, setSafeZone] = useState(false);
+
+  const initialWidthPct = 156;
+  const initialHeightPct = 78;
+  const initialPosition = { x: 50, y: 44.44 };
+
   const addDiv = (uiElementType: UiElementTypes, presetType?: PresetTypes) => {
-    const initialWidthPct = 156;
-    // Math.round(150 / (cellWidth * zoomLevel)) * (cellWidth * zoomLevel);
-    const initialHeightPct = 78;
-    // Math.round(100 / (cellHeight * zoomLevel)) * (cellHeight * zoomLevel);
-    const initialPosition = { x: 50, y: 44.44 };
 
     if (uiElementType === "social" || uiElementType === "button") {
       setDivs([
@@ -898,6 +915,20 @@ export const UiElementProvider: React.FC<UiElementProviderProps> = ({
     setDivs(updateDivs);
   };
 
+  const handleDuplicate = (div: Div) => {
+    const duplicatedDiv: Div = {
+      ...div,
+      uuid: crypto.randomUUID(),
+      name: `${div.uiElementType} ${divs.length + 1}`,
+      position: initialPosition,
+      containedElements: [],
+      containerName: "",
+      display: "flex",
+      positionType: "absolute",
+    };
+    setDivs([...divs, duplicatedDiv]);
+  };
+
   return (
     <UiElementContext.Provider
       value={{
@@ -928,6 +959,13 @@ export const UiElementProvider: React.FC<UiElementProviderProps> = ({
         updateBackgroundImage,
         updateHasSprite,
         updateSpriteProperties,
+        handleDuplicate,
+        gridSize,
+        setGridSize,
+        showGrid,
+        setShowGrid,
+        safeZone,
+        setSafeZone,
       }}
     >
       {children}

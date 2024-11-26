@@ -361,6 +361,7 @@ const uiComponent = () => (
         padding="small"
         textAlign="left"
         variant="neutral"
+        width="full"
         onClick={() => setOpenUiCode(true)}
       />
       {openUiCode && (
@@ -370,11 +371,11 @@ const uiComponent = () => (
             onClick={handleInnerClick}
           >
             {showImageInstructions ? (
-              <div className="h-[30rem] max-w-5xl overflow-y-auto">
+              <div className="h-[30rem] max-w-4xl overflow-y-auto">
                 <ImageInstructions divs={divs} />
               </div>
             ) : (
-              <div className="h-[30rem] max-w-5xl overflow-y-auto">
+              <div className="h-[30rem] max-w-4xl overflow-y-auto">
                 <div className="mx-6 mt-4 select-text text-left text-sm text-white">
                   <pre className="whitespace-pre-wrap">{codeSnippet}</pre>
                 </div>

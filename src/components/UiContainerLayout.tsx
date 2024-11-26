@@ -27,6 +27,8 @@ type UiElementLayoutProps = {
   cellHeight: number;
   zoomLevel: number;
   targetRef: React.RefObject<HTMLDivElement>;
+  handleDuplicate: (div: Div) => void;
+  safeZone: boolean;
 };
 
 export const UiContainerLayout = ({
@@ -46,6 +48,8 @@ export const UiContainerLayout = ({
   cellWidth,
   zoomLevel,
   targetRef,
+  handleDuplicate,
+  safeZone,
 }: UiElementLayoutProps) => {
   return (
     <>
@@ -92,6 +96,8 @@ export const UiContainerLayout = ({
           updateText={updateText}
           actionType={containedElement.actionType}
           actionTypeCount={containedElement.actionTypeCount}
+          handleDuplicate={handleDuplicate}
+          safeZone={safeZone}
         />
       ))}
     </>

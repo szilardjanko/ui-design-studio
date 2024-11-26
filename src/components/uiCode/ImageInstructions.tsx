@@ -53,7 +53,7 @@ export const ImageInstructions = ({ divs }: ImageInstructionsProps) => {
   findContainedImages(divs);
 
   return (
-    <div className="flex h-full w-96 flex-col items-center justify-between px-4">
+    <div className="flex h-full flex-col items-center justify-between px-8">
       {showDownloadImages ? (
         <DownloadImages
           socialImages={uniqueSocialImages}
@@ -76,7 +76,7 @@ export const ImageInstructions = ({ divs }: ImageInstructionsProps) => {
           </div>
           {uniqueCustomImages.size > 0 && (
             <>
-              <div>Custom Images</div>
+              <div>Custom and Uploaded Images</div>
               <div className="mb-2 max-h-24 w-fit overflow-y-auto rounded-md border border-slate-500 bg-slate-800 px-2 py-1">
                 {Array.from(uniqueCustomImages).map((image) => (
                   <div key={image}>{image}</div>
@@ -100,7 +100,8 @@ export const ImageInstructions = ({ divs }: ImageInstructionsProps) => {
             {uniqueCustomImages.size + uniqueSocialImages.size > 1
               ? `all ${uniqueCustomImages.size + uniqueSocialImages.size} image files `
               : "this 1 image file "}
-            in the &quot;uiElements&quot; folder
+            in the &quot;uiElements&quot; folder. If you are using any uploaded
+            images, make sure to include those as well.
           </div>
         </div>
       )}

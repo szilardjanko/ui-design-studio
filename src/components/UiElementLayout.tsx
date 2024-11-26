@@ -3,6 +3,7 @@ import React from "react";
 import { MoveIcon, ResizeIcon } from "./icons/UiElementIcons";
 import { Lock, Unlock } from "./icons/Lock";
 import { Trash } from "./icons/Delete";
+import { Copy } from "./icons/Edit";
 
 type UiElementLayoutProps = {
   children: React.ReactNode;
@@ -16,6 +17,7 @@ type UiElementLayoutProps = {
   handleSetLock: (lock: boolean) => void;
   setDeleteItem: React.Dispatch<React.SetStateAction<Div | null>>;
   setShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
+  handleDuplicate: (div: Div) => void;
 };
 
 export const UiElementLayout = ({
@@ -30,6 +32,7 @@ export const UiElementLayout = ({
   handleSetLock,
   setDeleteItem,
   setShowDeleteModal,
+  handleDuplicate,
 }: UiElementLayoutProps) => {
   const getBackgroundColor = (div: Div) => {
     if (div.backgroundImage) {
@@ -78,7 +81,10 @@ export const UiElementLayout = ({
         setIsMouseEnter(true);
       }}
       onMouseLeave={() => setIsMouseEnter(false)}
-      onClick={(e) => onSelect(div, e)}
+      onClick={(e) => {
+        onSelect(div, e);
+        // console.log(div, e);
+      }}
     >
       {children}
       {selected && selected.uuid === div.uuid && (
@@ -112,6 +118,12 @@ export const UiElementLayout = ({
       {(isMouseEnter || (selected && selected.uuid === div.uuid)) && (
         <div className="absolute -top-10 left-5 flex w-fit flex-row whitespace-nowrap bg-slate-900 bg-opacity-50">
           <div className="p-2 text-xs text-white">{div.name}</div>
+          <div
+            className="p-2 text-xs text-white"
+            onClick={() => handleDuplicate(div)}
+          >
+            <Copy />
+          </div>
           <div
             className="p-2 text-xs text-white"
             onClick={() => handleSetLock(!div.lock)}

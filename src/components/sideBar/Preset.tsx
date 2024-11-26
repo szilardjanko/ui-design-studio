@@ -7,7 +7,7 @@ export const Preset = () => {
   const { setDivs } = useUiElement();
 
   return (
-    <div className="mt-2 flex flex-col border-t border-slate-300 pt-2">
+    <div className="mt-2 flex flex-col gap-1 border-t border-slate-500 pt-2">
       <Button
         text="Preset 1"
         onClick={() => setDivs(presetOne)}

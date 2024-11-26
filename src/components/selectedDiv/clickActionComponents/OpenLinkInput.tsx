@@ -22,7 +22,7 @@ export const OpenLinkInput = ({
         id="link"
         name="link"
         type="text"
-        placeholder="https://www.decentraland.com"
+        placeholder="https://www.decentraland.org"
         value={link}
         onChange={(value) => handleLinkChange(value.target.value)}
         onBlur={handleOnMouseDownChange}

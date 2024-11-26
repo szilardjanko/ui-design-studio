@@ -2,23 +2,43 @@ import { createContext, useContext, useState, ReactNode } from "react";
 
 type SideBarTypes = "components" | "preset" | "social" | "";
 
-type PopupTextType = {
+type SideBarDocsTypes =
+  | "components"
+  | "preset"
+  | "social"
+  | "controls"
+  | "editor"
+  | "uiCode"
+  | "";
+
+type HandleConfirmTypes =
+  | "new"
+  | "signup"
+  | "login"
+  | "open"
+  | "save"
+  | "account"
+  | "";
+
+export type PopupTextType = {
   infoText: string;
   buttonText: string;
-  handleConfirm: "new" | "";
+  handleConfirm: HandleConfirmTypes;
 };
 
 type SideBarContextValue = {
   sideBarOptions: SideBarTypes;
-  handleSideBarSelection: (selection: SideBarTypes) => void;
+  setSideBarOptions: (selection: SideBarTypes) => void;
   popupText: PopupTextType;
   setPopupText: React.Dispatch<
     React.SetStateAction<{
       infoText: string;
       buttonText: string;
-      handleConfirm: "new" | "";
+      handleConfirm: HandleConfirmTypes;
     }>
   >;
+  sideBarDocsOptions: SideBarDocsTypes;
+  setSideBarDocsOptions: (selection: SideBarDocsTypes) => void;
 };
 
 type SideBarProviderProps = {
@@ -27,9 +47,11 @@ type SideBarProviderProps = {
 
 export const SideBarContext = createContext<SideBarContextValue>({
   sideBarOptions: "",
-  handleSideBarSelection: () => {},
+  setSideBarOptions: () => {},
   popupText: { infoText: "", buttonText: "", handleConfirm: "" },
   setPopupText: () => {},
+  sideBarDocsOptions: "",
+  setSideBarDocsOptions: () => {},
 });
 
 export const useSideBar = () => {
@@ -45,18 +67,18 @@ export const SideBarProvider: React.FC<SideBarProviderProps> = ({
     buttonText: "",
     handleConfirm: "",
   });
-
-  const handleSideBarSelection = (selection: SideBarTypes) => {
-    setSideBarOptions(selection);
-  };
+  const [sideBarDocsOptions, setSideBarDocsOptions] =
+    useState<SideBarDocsTypes>("");
 
   return (
     <SideBarContext.Provider
       value={{
         sideBarOptions,
-        handleSideBarSelection,
+        setSideBarOptions,
         popupText,
         setPopupText,
+        sideBarDocsOptions,
+        setSideBarDocsOptions,
       }}
     >
       {children}

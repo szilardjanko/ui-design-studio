@@ -14,7 +14,7 @@ type ComponentsProps = {
 
 export const Components = ({ addDiv }: ComponentsProps) => {
   return (
-    <div className="mt-2 flex flex-col border-t border-slate-300 pt-2">
+    <div className="mt-2 flex flex-col border-t border-slate-500 pt-2 gap-1">
       <Button
         text="Container"
         onClick={() => addDiv("container")}

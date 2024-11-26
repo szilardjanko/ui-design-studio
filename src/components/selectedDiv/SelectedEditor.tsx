@@ -77,7 +77,7 @@ export const SelectedEditor = () => {
         left: selected.padding.left.toFixed(2),
       });
     }
-  }, [selected]);
+  }, [selected, selected?.size.width, selected?.size.height]);
 
   const handleShowDeleteModal = () => {
     if (selected && selected.lock) return;
