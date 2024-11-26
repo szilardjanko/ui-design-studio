@@ -114,7 +114,7 @@ export const SideBar = ({
           }}
         />
       </div>
-      <div className="mt-2 border-t border-slate-700 pt-2">
+      <div className="mt-2 border-t pt-2">
         <UiCode divs={divs} />
       </div>
     </div>
