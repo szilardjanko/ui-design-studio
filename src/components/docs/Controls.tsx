@@ -1,5 +1,9 @@
 import React from "react";
 
 export const Controls = () => {
-  return <div>Controls</div>;
+  return (
+    <div className="flex w-full flex-col p-4">
+      <div className="text-2xl">Controls</div>
+    </div>
+  );
 };

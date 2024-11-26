@@ -68,7 +68,7 @@ export const SideBarProvider: React.FC<SideBarProviderProps> = ({
     handleConfirm: "",
   });
   const [sideBarDocsOptions, setSideBarDocsOptions] =
-    useState<SideBarDocsTypes>("");
+    useState<SideBarDocsTypes>("components");
 
   return (
     <SideBarContext.Provider
