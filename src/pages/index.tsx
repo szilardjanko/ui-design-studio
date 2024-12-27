@@ -54,7 +54,7 @@ export default function Home() {
           </div>
 
           <Link
-            href={"/CreateUi"}
+            href={"/create"}
             className="rounded-xl border border-slate-200 bg-slate-800 px-4 pb-3 pt-2 text-3xl font-bold text-white hover:bg-slate-700 md:text-4xl"
           >
             Create UI

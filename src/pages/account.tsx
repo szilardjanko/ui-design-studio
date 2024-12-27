@@ -62,7 +62,7 @@ export default function Account() {
 
   const handleOpenDesign = (element: Div[]) => {
     setDivs(element);
-    router.push(`/CreateUi`);
+    router.push(`/create`);
   };
 
   const handleDeleteDesign = async (id: string) => {
