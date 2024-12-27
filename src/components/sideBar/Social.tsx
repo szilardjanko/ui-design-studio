@@ -1,5 +1,5 @@
 import React from "react";
-import { PresetTypes, UiElementTypes } from "@/pages/CreateUi";
+import { PresetTypes, UiElementTypes } from "@/pages/create";
 import Image from "next/image";
 
 type SocialProps = {

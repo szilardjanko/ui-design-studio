@@ -1,4 +1,4 @@
-const Feedback = () => {
+export default function Feedback() {
   return (
     <div className="mx-auto flex flex-col items-center px-4 py-8">
       <div className="">
@@ -12,6 +12,4 @@ const Feedback = () => {
       </div>
     </div>
   );
-};
-
-export default Feedback;
+}

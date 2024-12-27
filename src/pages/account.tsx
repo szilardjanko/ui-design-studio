@@ -3,7 +3,7 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/router";
 import Button from "@/components/Button";
-import { Div } from "./CreateUi";
+import { Div } from "./create";
 import { useUiElement } from "@/context/UiElementContext";
 import { Trash, TrashFill } from "@/components/icons/Delete";
 import { Open, Refresh } from "@/components/icons/File";

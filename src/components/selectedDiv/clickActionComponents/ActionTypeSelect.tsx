@@ -6,7 +6,7 @@ import {
   Operations,
   actionOptions,
 } from "../ClickActions";
-import { Div } from "@/pages/CreateUi";
+import { Div } from "@/pages/create";
 
 type ActionTypeSelectProps = {
   div: Div;

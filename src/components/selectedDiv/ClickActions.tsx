@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SelectedContainerLayout } from "./SelectedContainerLayout";
-import { Div } from "@/pages/CreateUi";
+import { Div } from "@/pages/create";
 import { ActionTypeSelect } from "./clickActionComponents/ActionTypeSelect";
 import { OpenLinkInput } from "./clickActionComponents/OpenLinkInput";
 import { ShowHideSelect } from "./clickActionComponents/ShowHideSelect";

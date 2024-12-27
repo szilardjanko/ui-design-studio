@@ -1,4 +1,4 @@
-import { Div, SpritePropertyTypes } from "@/pages/CreateUi";
+import { Div, SpritePropertyTypes } from "@/pages/create";
 import React, { useEffect, useState } from "react";
 import { PresetColors } from "./PresetColors";
 import { SelectedContainerLayout } from "./SelectedContainerLayout";
@@ -35,6 +35,8 @@ export const TextColorControls = ({
     updateHasSprite,
     updateSpriteProperties,
     updateSize,
+    updateFontSize,
+    updateFontFamily,
   } = useUiElement();
 
   useEffect(() => {
@@ -102,20 +104,51 @@ export const TextColorControls = ({
           div.uiElementType != "container" &&
           div.uiElementType != "social" && (
             <>
-              <label
-                htmlFor="text-input"
-                className="w-full text-center text-white"
-              >
-                Text
-              </label>
-              <input
-                id="text-input"
-                name="text-input"
-                className="mx-auto mb-2 w-fit rounded-xl border border-slate-500 bg-slate-700 text-center text-white hover:border-slate-400"
-                type="text"
-                value={div.text}
-                onChange={(e) => onTextChange(e.target.value)}
-              />
+              <div className="flex flex-col">
+                <label
+                  htmlFor="text-input"
+                  className="w-full text-center text-white"
+                >
+                  Text
+                </label>
+                <input
+                  id="text-input"
+                  name="text-input"
+                  className="mx-auto mb-2 w-fit rounded-xl border border-slate-500 bg-slate-700 text-center text-white hover:border-slate-400"
+                  type="text"
+                  value={div.text}
+                  onChange={(e) => onTextChange(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col">
+                <label htmlFor="font-size">Size</label>
+                <input
+                  id="font-size"
+                  name="font-size"
+                  className="mx-auto mb-2 w-fit rounded-xl border border-slate-500 bg-slate-700 text-center text-white hover:border-slate-400"
+                  type="number"
+                  value={div.fontSize}
+                  onChange={(e) => updateFontSize(Number(e.target.value))}
+                />
+              </div>
+              <div className="flex flex-col">
+                <label htmlFor="font-family">Font</label>
+                <select
+                  id="font-family"
+                  name="font-family"
+                  className="mx-auto mb-2 w-44 rounded-xl border border-slate-500 bg-slate-700 text-center text-white hover:border-slate-400"
+                  value={div.fontFamily}
+                  onChange={(e) =>
+                    updateFontFamily(
+                      e.target.value as "serif" | "sans-serif" | "monospace",
+                    )
+                  }
+                >
+                  <option value="serif">serif</option>
+                  <option value="sans-serif">sans-serif</option>
+                  <option value="monospace">monospace</option>
+                </select>
+              </div>
             </>
           )}
         {show === "color" && (
@@ -153,7 +186,7 @@ export const TextColorControls = ({
             />
             <label
               htmlFor="transparent"
-              className="mt-1 mb-2 cursor-pointer mx-auto"
+              className="mx-auto mb-2 mt-1 cursor-pointer"
             >
               Transparent: &nbsp;
               <input

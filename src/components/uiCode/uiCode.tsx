@@ -1,19 +1,20 @@
-import { Div, SpritePropertyTypes } from "@/pages/CreateUi";
-import React, { useState } from "react";
-import Button from "../Button";
-import { Code } from "../icons/File";
+import { Div, SpritePropertyTypes } from "@/pages/create";
+import React, { useEffect, useMemo } from "react";
 import { ImageInstructions } from "./ImageInstructions";
-
-type UiCodeProps = {
-  divs: Div[];
-};
+import { useUiElement } from "@/context/UiElementContext";
+import { useUiCode } from "@/context/UiCodeContext";
 
 type Coords = { x: number; y: number };
 
-export const UiCode = ({ divs }: UiCodeProps) => {
-  const [openUiCode, setOpenUiCode] = useState(false);
-  const [copyCodeText, setCopyCodeText] = useState("Copy Code");
-  const [showImageInstructions, setShowImageInstructions] = useState(false);
+export const UiCode = () => {
+  const { divs } = useUiElement();
+  const {
+    uiCode,
+    setUiCode,
+    showInstructions,
+    setShowInstructions,
+    useCanvasInfo,
+  } = useUiCode();
 
   const checkForImageFile = (divs: Div[]): boolean => {
     for (const div of divs) {
@@ -59,7 +60,7 @@ export const UiCode = ({ divs }: UiCodeProps) => {
         },`;
   };
 
-  const createUiTransform = (div: Div) => {
+  const checkUseCanvasInfoPosition = (div: Div) => {
     const posX = div.containerName
       ? div.position.x
       : div.position.x + widthPercent(div) / 2 < 50
@@ -71,15 +72,43 @@ export const UiCode = ({ divs }: UiCodeProps) => {
         ? positionYtop(div)
         : positionYbottom(div);
 
+    if (useCanvasInfo && div.containerName === "") {
+      return `
+        left: \`\${${div.position.x / 100} * canvas.width}px\`,
+        top: \`\${${div.position.y / 100} * canvas.height}px\`,
+      `;
+    } else {
+      return `
+        ${div.position.x + widthPercent(div) / 2 < 50 ? "left" : "right"}: '${posX.toFixed(2)}px',
+        ${div.position.y + heightPercent(div) / 2 < 50 ? "top" : "bottom"}: '${posY.toFixed(2)}px',`;
+    }
+  };
+
+  const checkUseCanvasInfoSize = (div: Div) => {
+    const sizeRatio = div.size.width / div.size.height;
+    const heightRatio = Number(div.size.height) / screenHeight;
+
+    if (useCanvasInfo) {
+      return `
+      width: \`\${${sizeRatio * heightRatio} * canvas.height}px\`,
+      height: \`\${${heightRatio} * canvas.height}px\`,
+      `;
+    } else {
+      return `
+      width: '${div.size.width.toFixed(2)}px',
+      height: '${div.size.height.toFixed(2)}px'
+      `;
+    }
+  };
+
+  const createUiTransform = (div: Div) => {
     return `
         positionType: '${div.positionType}',
         position: {
-          ${div.position.x + widthPercent(div) / 2 < 50 ? "left" : "right"}: '${posX.toFixed(2)}px',
-          ${div.position.y + heightPercent(div) / 2 < 50 ? "top" : "bottom"}: '${posY.toFixed(2)}px',
+          ${checkUseCanvasInfoPosition(div)}
         },
         ${createPaddingMargin(div)}
-        width: '${div.size.width.toFixed(2)}px',
-        height: '${div.size.height.toFixed(2)}px'
+        ${checkUseCanvasInfoSize(div)}
       `;
   };
 
@@ -92,7 +121,9 @@ export const UiCode = ({ divs }: UiCodeProps) => {
         return `
     <Label
       value=${div.actionType === "Count" ? "{" + div.actionTypeCount?.targetDivName.replace(/\s+/g, "") + ".toString()}" : "'" + div.text + "'"}
-      fontSize={18}
+      ${useCanvasInfo ? `fontSize={scaleFontSize(${div.fontSize})}` : `fontSize={${div.fontSize}}`}
+      font="${div.fontFamily}"
+      textWrap='nowrap'
       color={${textColor}}
       uiTransform={{${uiTransform}}}
       ${handleBackground(div)}
@@ -102,7 +133,9 @@ export const UiCode = ({ divs }: UiCodeProps) => {
     <Button
       value="${div.text}"
       variant="${div.backgroundImage ? "secondary" : "primary"}"
-      fontSize={18}
+      ${useCanvasInfo ? `fontSize={scaleFontSize(${div.fontSize})}` : `fontSize={(${div.fontSize})}`}
+      font="${div.fontFamily}"
+      textWrap='nowrap'
       color={${textColor}}
       uiTransform={{${uiTransform}}}
       ${handleBackground(div)}
@@ -112,7 +145,9 @@ export const UiCode = ({ divs }: UiCodeProps) => {
         return `
     <Input
       placeholder='${div.text}'
-      fontSize={18}
+      ${useCanvasInfo ? `fontSize={scaleFontSize(${div.fontSize})}` : `fontSize={(${div.fontSize})}`}
+      font="${div.fontFamily}"
+      textWrap='nowrap'
       placeholderColor={${textColor}}
       color={${textColor}}
       uiTransform={{${uiTransform}}}
@@ -131,12 +166,10 @@ export const UiCode = ({ divs }: UiCodeProps) => {
         alignContent: '${div.alignContent}', 
         flexWrap: '${div.flexWrap}', 
         position: { 
-          right: '${div.containerName !== "" ? div.position.x : positionXright(div).toFixed(2)}px', 
-          bottom: '${div.containerName !== "" ? div.position.y : positionYbottom(div).toFixed(2)}px'
+          ${checkUseCanvasInfoPosition(div)}
         }, 
         ${createPaddingMargin(div)}
-        width: '${div.size.width.toFixed(2)}px',
-        height: '${div.size.height.toFixed(2)}px'
+        ${checkUseCanvasInfoSize(div)}
         }} 
       ${handleBackground(div)}
     >
@@ -321,9 +354,11 @@ export const UiCode = ({ divs }: UiCodeProps) => {
     return Array.from(numberVariables).join("\n");
   };
 
-  const codeSnippet = `import { Color4 } from '@dcl/sdk/math'
-import ReactEcs, { ${handleImports()} ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
+  const code = useMemo(() => {
+    return `import ReactEcs, { ${handleImports()} ReactEcsRenderer, UiEntity, scaleFontSize } from '@dcl/sdk/react-ecs'
+import { Color4 } from '@dcl/sdk/math'
 ${handleExternalUrl()}
+${useCanvasInfo ? "import { engine, UiCanvasInformation } from '@dcl/sdk/ecs'" : ""}
 
 export function setupUi() {
   ReactEcsRenderer.setUiRenderer(uiComponent)
@@ -331,98 +366,52 @@ export function setupUi() {
 ${handleBooleanVariables() ? handleBooleanVariables() : ""}
 ${handleNumberVariables() ? handleNumberVariables() : ""}
 
-const uiComponent = () => (
-  <UiEntity
-    uiTransform={{
-      display: 'flex',
-      positionType: 'absolute',
-      position: {
-        right: '0.00%',
-        top: '0.00%'
-      },
-      width: '100%',
-      height: '100%'
-    }}
-  >
-  ${handleUiElements()}
-  </UiEntity>
-)
+const uiComponent = () => {
+  ${useCanvasInfo ? "let canvas = UiCanvasInformation.get(engine.RootEntity)" : ""}
+  return (
+    <UiEntity
+      uiTransform={{
+        display: 'flex',
+        positionType: 'absolute',
+        position: {
+          right: '0.00%',
+          top: '0.00%'
+        },
+        width: '100%',
+        height: '100%'
+      }}
+    >
+    ${handleUiElements()}
+    </UiEntity>
+  )
+}
 `;
+  }, [divs, useCanvasInfo]);
+
+  useEffect(() => {
+    setShowInstructions(false);
+    setUiCode(code);
+  }, [code]);
 
   const handleInnerClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
 
   return (
-    <div>
-      <Button
-        text={"UI Code"}
-        icon={<Code />}
-        padding="small"
-        textAlign="left"
-        variant="neutral"
-        width="full"
-        onClick={() => setOpenUiCode(true)}
-      />
-      {openUiCode && (
-        <div className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-black bg-opacity-75 backdrop-blur">
-          <div
-            className="flex flex-col items-center rounded-lg border border-slate-400 bg-black p-2"
-            onClick={handleInnerClick}
-          >
-            {showImageInstructions ? (
-              <div className="h-[30rem] max-w-4xl overflow-y-auto">
-                <ImageInstructions divs={divs} />
-              </div>
-            ) : (
-              <div className="h-[30rem] max-w-4xl overflow-y-auto">
-                <div className="mx-6 mt-4 select-text text-left text-sm text-white">
-                  <pre className="whitespace-pre-wrap">{codeSnippet}</pre>
-                </div>
-              </div>
-            )}
-          </div>
-          <div className="mt-2 flex w-full flex-row items-center justify-center pt-2">
-            {showImageInstructions ? (
-              <Button
-                className="mx-2 my-1 w-40 rounded-xl text-center"
-                text={"Back"}
-                variant="remove"
-                onClick={() => setShowImageInstructions(false)}
-              />
-            ) : (
-              <>
-                <Button
-                  className="mx-2 my-1 w-40 rounded-xl text-center"
-                  text={copyCodeText}
-                  variant="copy"
-                  onClick={() => {
-                    navigator.clipboard.writeText(codeSnippet);
-                    setCopyCodeText("Code Copied");
-                    setTimeout(() => {
-                      setCopyCodeText("Copy Code");
-                    }, 2000);
-                  }}
-                />
-                {hasImageFile && (
-                  <Button
-                    text="Image Instructions"
-                    variant="copy"
-                    className="mx-2 my-1 w-40 whitespace-nowrap rounded-xl text-center"
-                    onClick={() => setShowImageInstructions(true)}
-                  />
-                )}
-                <Button
-                  className="mx-2 my-1 w-40 rounded-xl text-center"
-                  text={"Close"}
-                  variant="remove"
-                  onClick={() => setOpenUiCode(false)}
-                />
-              </>
-            )}
-          </div>
+    <div
+      className="flex w-full flex-col items-center rounded border border-slate-600 bg-black"
+      onClick={handleInnerClick}
+    >
+      {showInstructions && (
+        <div className="mb-2 w-full overflow-y-auto border-b border-slate-600 pb-2">
+          <ImageInstructions divs={divs} />
         </div>
       )}
+      <div className="h-[80vh] w-full overflow-y-auto">
+        <div className="mx-6 mt-4 select-text text-left text-sm text-white">
+          <pre className="whitespace-pre-wrap">{uiCode}</pre>
+        </div>
+      </div>
     </div>
   );
 };

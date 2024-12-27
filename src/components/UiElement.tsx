@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Div, UiElementTypes } from "@/pages/CreateUi";
+import { Div, UiElementTypes } from "@/pages/create";
 import { UiElementLayout } from "./UiElementLayout";
 import { UiContainerLayout } from "./UiContainerLayout";
 import {

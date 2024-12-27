@@ -1,4 +1,4 @@
-import { Div } from "@/pages/CreateUi";
+import { Div } from "@/pages/create";
 import React, { useState } from "react";
 import {
   CaretDown,

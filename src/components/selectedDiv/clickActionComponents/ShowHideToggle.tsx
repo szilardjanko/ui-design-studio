@@ -1,4 +1,4 @@
-import { Div } from "@/pages/CreateUi";
+import { Div } from "@/pages/create";
 import React from "react";
 import { ActionTypeShow } from "../ClickActions";
 import { Eye, EyeFill } from "@/components/icons/Eye";

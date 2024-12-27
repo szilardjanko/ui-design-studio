@@ -1,4 +1,4 @@
-import { Div } from "@/pages/CreateUi";
+import { Div } from "@/pages/create";
 import React from "react";
 import { MoveIcon, ResizeIcon } from "./icons/UiElementIcons";
 import { Lock, Unlock } from "./icons/Lock";
@@ -61,6 +61,8 @@ export const UiElementLayout = ({
         margin: `${div.margin.top}px ${div.margin.right}px ${div.margin.bottom}px ${div.margin.left}px`,
         padding: `${div.padding.top}px ${div.padding.right}px ${div.padding.bottom}px ${div.padding.left}px`,
         zIndex: 9,
+        fontSize: `${div.fontSize}px`,
+        fontFamily: div.fontFamily,
         color: div.textColor,
         backgroundImage: div.backgroundImage
           ? `url(${div.backgroundImage})`

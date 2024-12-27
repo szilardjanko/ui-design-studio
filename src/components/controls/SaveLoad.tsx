@@ -1,13 +1,18 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef } from "react";
+import { Back, Download } from "../icons/File";
 import Button from "../Button";
-import { useUiElement } from "@/context/UiElementContext";
-import { Div } from "@/pages/CreateUi";
-import { useSideBar } from "@/context/SideBarContext";
+import { Login, New, Open, Save } from "../icons/File";
+import { SignUp } from "../icons/File";
 import { useAuth } from "@/context/AuthContext";
-import { Download, File, Login, New, Open, Save, SignUp } from "../icons/File";
+import { useSideBar } from "@/context/SideBarContext";
+import { useUiElement } from "@/context/UiElementContext";
+import { Div } from "@/pages/create";
 
-export const SaveLoad = () => {
-  const [showOptions, setShowOptions] = useState(false);
+type SaveLoadProps = {
+  setShowFileMenu: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const SaveLoad = ({ setShowFileMenu }: SaveLoadProps) => {
   const { divs, setDivs } = useUiElement();
   const { setPopupText } = useSideBar();
   const { user } = useAuth();
@@ -16,7 +21,7 @@ export const SaveLoad = () => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setShowOptions(false);
+        setShowFileMenu(false);
       }
     };
 
@@ -104,7 +109,7 @@ export const SaveLoad = () => {
   };
 
   const handleLoad = (event: ChangeEvent<HTMLInputElement>): void => {
-    setShowOptions(false);
+    setShowFileMenu(false);
     const file = event.target.files?.[0];
     if (file) {
       if (file.type !== "application/json" && !file.name.endsWith(".json")) {
@@ -195,91 +200,83 @@ export const SaveLoad = () => {
   }, []);
 
   return (
-    <div className="flex flex-col">
-      <Button
-        text="File"
-        icon={<File />}
-        textAlign="left"
-        onClick={() => setShowOptions(!showOptions)}
-      />
-      {showOptions && (
-        <div className="fixed left-1 top-12 z-10 flex h-[90vh] w-44 select-none flex-col items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm">
-          <div
-            className="absolute left-0 top-0 flex w-44 px-1 flex-col gap-1 bg-gradient-to-bl from-slate-800 to-black shadow-lg"
-            ref={menuRef}
-          >
-            {!user && (
-              <>
-                <Button
-                  text="Sign Up"
-                  icon={<SignUp />}
-                  textAlign="left"
-                  onClick={() => {
-                    setPopupText({
-                      infoText: "Sign up to save your design",
-                      buttonText: "Sign Up",
-                      handleConfirm: "signup",
-                    });
-                    setShowOptions(false);
-                  }}
-                />
-                <Button
-                  text="Login"
-                  icon={<Login />}
-                  textAlign="left"
-                  onClick={() => {
-                    setPopupText({
-                      infoText: "Login to save your design",
-                      buttonText: "Login",
-                      handleConfirm: "login",
-                    });
-                    setShowOptions(false);
-                  }}
-                />
-              </>
-            )}
-            {user && (
-              <Button
-                text="Save"
-                icon={<Save />}
-                textAlign="left"
-                onClick={() => {
-                  handleSave();
-                  setShowOptions(false);
-                }}
-              />
-            )}
-            <Button
-              text="New"
-              icon={<New />}
-              textAlign="left"
-              onClick={() => {
-                setPopupText({
-                  infoText: "Are you sure you want to start a new design?",
-                  buttonText: "New",
-                  handleConfirm: "new",
-                });
-                setShowOptions(false);
-              }}
-            />
-            <Button
-              text="Open"
-              icon={<Open />}
-              textAlign="left"
-              onClick={() => handleOpen()}
-            />
-            <Button
-              text="Download"
-              icon={<Download />}
-              textAlign="left"
-              onClick={() => {
-                handleDownload();
-                setShowOptions(false);
-              }}
-            />
-          </div>
-        </div>
+    <div className="flex flex-col gap-1">
+      {!user && (
+        <>
+          <Button
+            text="Sign Up"
+            icon={<SignUp />}
+            textAlign="left"
+            onClick={() => {
+              setPopupText({
+                infoText: "Sign up to save your design",
+                buttonText: "Sign Up",
+                handleConfirm: "signup",
+              });
+              setShowFileMenu(false);
+            }}
+          />
+          <Button
+            text="Login"
+            icon={<Login />}
+            textAlign="left"
+            onClick={() => {
+              setPopupText({
+                infoText: "Login to save your design",
+                buttonText: "Login",
+                handleConfirm: "login",
+              });
+              setShowFileMenu(false);
+            }}
+          />
+        </>
       )}
+      {user && (
+        <Button
+          text="Save"
+          icon={<Save />}
+          textAlign="left"
+          onClick={() => {
+            handleSave();
+            setShowFileMenu(false);
+          }}
+        />
+      )}
+      <Button
+        text="New"
+        icon={<New />}
+        textAlign="left"
+        onClick={() => {
+          setPopupText({
+            infoText: "Are you sure you want to start a new design?",
+            buttonText: "New",
+            handleConfirm: "new",
+          });
+          setShowFileMenu(false);
+        }}
+      />
+      <Button
+        text="Open"
+        icon={<Open />}
+        textAlign="left"
+        onClick={() => handleOpen()}
+      />
+      <Button
+        text="Download"
+        icon={<Download />}
+        textAlign="left"
+        onClick={() => {
+          handleDownload();
+          setShowFileMenu(false);
+        }}
+      />
+      <Button
+        text={"Back"}
+        icon={<Back />}
+        textAlign="left"
+        variant="remove"
+        onClick={() => setShowFileMenu(false)}
+      />
       <input
         type="file"
         id="fileInput"

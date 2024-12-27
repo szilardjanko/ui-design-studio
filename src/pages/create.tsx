@@ -13,6 +13,7 @@ import {
 import { useUiElement } from "@/context/UiElementContext";
 import { useSideBar } from "@/context/SideBarContext";
 import { PopupModal } from "@/components/popup/PopupModal";
+import { UiCode } from "@/components/uiCode/uiCode";
 
 export type UiElementTypes =
   | "container"
@@ -48,6 +49,8 @@ export type Div = {
   size: { width: number; height: number };
   backgroundColor: string;
   textColor: string;
+  fontSize: number;
+  fontFamily: "serif" | "sans-serif" | "monospace";
   lock: boolean;
   flexDirection: FlexDirectionTypes;
   justifyContent: JustifyContentTypes;
@@ -108,7 +111,7 @@ export type PresetTypes =
   | "lens_black"
   | "lens_green";
 
-const CreateUi = () => {
+export default function Create() {
   const targetRef = useRef<HTMLDivElement>(null);
   const [boundary, setBoundary] = useState({
     top: 0,
@@ -132,6 +135,7 @@ const CreateUi = () => {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [bgImage, setBgImage] = useState(`url(dclBgDay.png)`);
   const [bgImageCount, setBgImageCount] = useState(0);
+  const [showUiCode, setShowUiCode] = useState(false);
 
   const { popupText } = useSideBar();
 
@@ -254,19 +258,27 @@ const CreateUi = () => {
           setBgImageCount={setBgImageCount}
           safeZone={safeZone}
           setSafeZone={setSafeZone}
+          showUiCode={showUiCode}
+          setShowUiCode={setShowUiCode}
         />
-        <Canvas
-          targetRef={targetRef}
-          bgImage={bgImage}
-          cellHeight={cellHeight}
-          cellWidth={cellWidth}
-          boundary={boundary}
-          gridBackgroundStyle={gridBackgroundStyle}
-          zoomLevel={zoomLevel}
-          snapToGrid={snapToGrid}
-          safeZone={safeZone}
-        />
-        <SelectedEditor />
+        {showUiCode ? (
+          <UiCode />
+        ) : (
+          <>
+            <Canvas
+              targetRef={targetRef}
+              bgImage={bgImage}
+              cellHeight={cellHeight}
+              cellWidth={cellWidth}
+              boundary={boundary}
+              gridBackgroundStyle={gridBackgroundStyle}
+              zoomLevel={zoomLevel}
+              snapToGrid={snapToGrid}
+              safeZone={safeZone}
+            />
+            <SelectedEditor />
+          </>
+        )}
       </div>
       <div className="absolute top-10 flex h-full flex-col items-center bg-slate-900 px-10 pt-20 text-center sm:hidden">
         <BlockIcon />
@@ -282,6 +294,4 @@ const CreateUi = () => {
       {popupText.infoText != "" && <PopupModal />}
     </div>
   );
-};
-
-export default CreateUi;
+}

@@ -10,7 +10,7 @@ import {
   PresetTypes,
   SpritePropertyTypes,
   UiElementTypes,
-} from "@/pages/CreateUi";
+} from "@/pages/create";
 import { createContext, useContext, useState, ReactNode } from "react";
 
 type UiElementContextValue = {
@@ -39,6 +39,10 @@ type UiElementContextValue = {
   updateText: (newText: string) => void;
   updateBackgroundColor: (newBackgroundColor: string) => void;
   updateTextColor: (newTextColor: string) => void;
+  updateFontSize: (newFontSize: number) => void;
+  updateFontFamily: (
+    newFontFamily: "serif" | "sans-serif" | "monospace",
+  ) => void;
   handleDelete: () => void;
   handleSetLock: (lock: boolean) => void;
   updateBackgroundImage: (newImage: {
@@ -85,6 +89,8 @@ export const UiElementContext = createContext<UiElementContextValue>({
   updateText: () => {},
   updateBackgroundColor: () => {},
   updateTextColor: () => {},
+  updateFontSize: () => {},
+  updateFontFamily: () => {},
   handleDelete: () => {},
   handleSetLock: () => {},
   updateBackgroundImage: () => {},
@@ -120,7 +126,6 @@ export const UiElementProvider: React.FC<UiElementProviderProps> = ({
   const initialPosition = { x: 50, y: 44.44 };
 
   const addDiv = (uiElementType: UiElementTypes, presetType?: PresetTypes) => {
-
     if (uiElementType === "social" || uiElementType === "button") {
       setDivs([
         ...divs,
@@ -142,6 +147,8 @@ export const UiElementProvider: React.FC<UiElementProviderProps> = ({
               ? { width: 52, height: 52 }
               : { width: initialWidthPct, height: initialHeightPct },
           textColor: "#000000",
+          fontSize: 18,
+          fontFamily: "sans-serif",
           lock: false,
           flexDirection: "row",
           justifyContent: "flex-start",
@@ -243,6 +250,8 @@ export const UiElementProvider: React.FC<UiElementProviderProps> = ({
           size: { width: initialWidthPct, height: initialHeightPct },
           backgroundColor: "#ffffff",
           textColor: "#000000",
+          fontSize: 18,
+          fontFamily: "sans-serif",
           lock: false,
           flexDirection: "row",
           justifyContent: "flex-start",
@@ -829,6 +838,90 @@ export const UiElementProvider: React.FC<UiElementProviderProps> = ({
     setDivs(updateDivs);
   };
 
+  const updateFontSize = (newFontSize: number) => {
+    if (!selected) return;
+
+    const updateDivs = [...divs];
+
+    if (selected.containerName !== "") {
+      updateDivs.map((div) => {
+        if (div.uuid === selected.containerName) {
+          div.containedElements.map((containedElement) => {
+            if (containedElement.uuid === selected.uuid) {
+              containedElement.fontSize = newFontSize;
+            }
+          });
+        } else {
+          div.containedElements
+            .filter(
+              (containedElementLayerTwo) =>
+                containedElementLayerTwo.uiElementType === "container",
+            )
+            .map((containedElementLayerTwo) => {
+              containedElementLayerTwo.containedElements.map(
+                (containedElementLayerThree) => {
+                  if (containedElementLayerThree.uuid === selected.uuid) {
+                    containedElementLayerThree.fontSize = newFontSize;
+                  }
+                },
+              );
+            });
+        }
+      });
+      setDivs(updateDivs);
+    }
+
+    updateDivs.map((div) => {
+      if (div.uuid === selected.uuid) {
+        div.fontSize = newFontSize;
+      }
+    });
+    setDivs(updateDivs);
+  };
+
+  const updateFontFamily = (
+    newFontFamily: "serif" | "sans-serif" | "monospace",
+  ) => {
+    if (!selected) return;
+
+    const updateDivs = [...divs];
+
+    if (selected.containerName !== "") {
+      updateDivs.map((div) => {
+        if (div.uuid === selected.containerName) {
+          div.containedElements.map((containedElement) => {
+            if (containedElement.uuid === selected.uuid) {
+              containedElement.fontFamily = newFontFamily;
+            }
+          });
+        } else {
+          div.containedElements
+            .filter(
+              (containedElementLayerTwo) =>
+                containedElementLayerTwo.uiElementType === "container",
+            )
+            .map((containedElementLayerTwo) => {
+              containedElementLayerTwo.containedElements.map(
+                (containedElementLayerThree) => {
+                  if (containedElementLayerThree.uuid === selected.uuid) {
+                    containedElementLayerThree.fontFamily = newFontFamily;
+                  }
+                },
+              );
+            });
+        }
+      });
+      setDivs(updateDivs);
+    }
+
+    updateDivs.map((div) => {
+      if (div.uuid === selected.uuid) {
+        div.fontFamily = newFontFamily;
+      }
+    });
+    setDivs(updateDivs);
+  };
+
   const handleDelete = () => {
     if (!selected) return;
 
@@ -954,6 +1047,8 @@ export const UiElementProvider: React.FC<UiElementProviderProps> = ({
         updateText,
         updateBackgroundColor,
         updateTextColor,
+        updateFontSize,
+        updateFontFamily,
         handleDelete,
         handleSetLock,
         updateBackgroundImage,

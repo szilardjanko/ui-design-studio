@@ -1,4 +1,4 @@
-import { Div } from "@/pages/CreateUi";
+import { Div } from "@/pages/create";
 import React from "react";
 import { ActionTypeCount, Operations } from "../ClickActions";
 import { AddIcon, SubtractIcon } from "@/components/icons/AddSub";

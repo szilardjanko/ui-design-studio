@@ -4,7 +4,7 @@ import {
   FlexWrapTypes,
   FlexDirectionTypes,
   Div,
-} from "@/pages/CreateUi";
+} from "@/pages/create";
 import React, { useState } from "react";
 
 type ContainerPropertiesProps = {

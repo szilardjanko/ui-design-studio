@@ -175,15 +175,15 @@ export const SelectedEditor = () => {
             selected.uiElementType === "button" ||
             (selected.uiElementType === "label" &&
               selected.actionType === "Count")) && (
-            <ClickActions
-              div={selected}
-              divs={divs}
-              onMouseDownChange={updateOnMouseDown}
-              onActionTypeChange={updateActionType}
-              onActionTypeShowChange={updateActionTypeShow}
-              onActionTypeCountChange={updateActionTypeCount}
-            />
-          )}
+              <ClickActions
+                div={selected}
+                divs={divs}
+                onMouseDownChange={updateOnMouseDown}
+                onActionTypeChange={updateActionType}
+                onActionTypeShowChange={updateActionTypeShow}
+                onActionTypeCountChange={updateActionTypeCount}
+              />
+            )}
         </div>
       ) : (
         <div className="flex select-none flex-col justify-start border-x border-slate-700 bg-slate-800 text-sm md:w-72 md:text-base">

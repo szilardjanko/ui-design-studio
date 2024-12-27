@@ -1,4 +1,4 @@
-import { Div } from "@/pages/CreateUi";
+import { Div } from "@/pages/create";
 
 export const presetOne: Div[] = [
   {
@@ -20,6 +20,8 @@ export const presetOne: Div[] = [
           y: 0,
         },
         text: "Main Menu",
+        fontSize: 18,
+        fontFamily: "sans-serif",
         size: {
           width: 195,
           height: 39,
@@ -59,6 +61,8 @@ export const presetOne: Div[] = [
           y: 0,
         },
         text: "add+",
+        fontSize: 18,
+        fontFamily: "sans-serif",
         size: {
           width: 136.5,
           height: 39,
@@ -115,6 +119,8 @@ export const presetOne: Div[] = [
           y: 0,
         },
         text: "sub-",
+        fontSize: 18,
+        fontFamily: "sans-serif",
         size: {
           width: 136.5,
           height: 39,
@@ -171,6 +177,8 @@ export const presetOne: Div[] = [
           y: 0,
         },
         text: "Open Link",
+        fontSize: 18,
+        fontFamily: "sans-serif",
         size: {
           width: 136.5,
           height: 39,
@@ -218,6 +226,8 @@ export const presetOne: Div[] = [
               y: 0,
             },
             text: "Accept",
+            fontSize: 18,
+            fontFamily: "sans-serif",
             size: {
               width: 136.5,
               height: 39,
@@ -266,6 +276,8 @@ export const presetOne: Div[] = [
               y: 0,
             },
             text: "Cancel",
+            fontSize: 18,
+            fontFamily: "sans-serif",
             size: {
               width: 136.5,
               height: 39,
@@ -309,6 +321,8 @@ export const presetOne: Div[] = [
           y: 0,
         },
         text: "New UI container 2",
+        fontSize: 18,
+        fontFamily: "sans-serif",
         size: {
           width: 292.5,
           height: 39,
@@ -343,6 +357,8 @@ export const presetOne: Div[] = [
       y: 22.22222222222222,
     },
     text: "New UI container 1",
+    fontSize: 18,
+    fontFamily: "sans-serif",
     size: {
       width: 351,
       height: 390,
@@ -395,6 +411,8 @@ export const presetOne: Div[] = [
           y: 0,
         },
         text: "Socials",
+        fontSize: 18,
+        fontFamily: "sans-serif",
         size: {
           width: 78,
           height: 39,
@@ -434,6 +452,8 @@ export const presetOne: Div[] = [
           y: 0,
         },
         text: "",
+        fontSize: 18,
+        fontFamily: "sans-serif",
         size: {
           width: 39,
           height: 39,
@@ -476,6 +496,8 @@ export const presetOne: Div[] = [
           y: 0,
         },
         text: "",
+        fontSize: 18,
+        fontFamily: "sans-serif",
         size: {
           width: 39,
           height: 39,
@@ -518,6 +540,8 @@ export const presetOne: Div[] = [
           y: 0,
         },
         text: "",
+        fontSize: 18,
+        fontFamily: "sans-serif",
         size: {
           width: 39,
           height: 39,
@@ -555,6 +579,8 @@ export const presetOne: Div[] = [
       y: 80.55555555555556,
     },
     text: "New UI container 3",
+    fontSize: 18,
+    fontFamily: "sans-serif",
     size: {
       width: 312,
       height: 58.5,
@@ -601,6 +627,8 @@ export const presetOne: Div[] = [
       y: 91.66666666666666,
     },
     text: "show/hide 1",
+    fontSize: 18,
+    fontFamily: "sans-serif",
     size: {
       width: 136.5,
       height: 39,
@@ -649,6 +677,8 @@ export const presetOne: Div[] = [
       y: 91.66666666666666,
     },
     text: "show/hide 2",
+    fontSize: 18,
+    fontFamily: "sans-serif",
     size: {
       width: 136.5,
       height: 39,
@@ -697,6 +727,8 @@ export const presetOne: Div[] = [
       y: 91.66666666666666,
     },
     text: "New UI label 5",
+    fontSize: 18,
+    fontFamily: "sans-serif",
     size: {
       width: 39,
       height: 39,
@@ -753,6 +785,8 @@ export const presetTwo: Div[] = [
           y: 0,
         },
         text: "DCL UI Design Studio",
+        fontSize: 18,
+        fontFamily: "sans-serif",
         size: {
           width: 514.8,
           height: 62.4,
@@ -800,6 +834,8 @@ export const presetTwo: Div[] = [
               y: 0,
             },
             text: "DCL UI Design Studio: an open sourced web app enabling anyone to design interactive UIs for DCL scenes without coding. This drag-and-drop platform simplifies UI creation, enhancing accessibility and efficiency for creators.",
+            fontSize: 18,
+            fontFamily: "sans-serif",
             size: {
               width: 468,
               height: 156,
@@ -834,6 +870,8 @@ export const presetTwo: Div[] = [
           y: 0,
         },
         text: "New UI container 2",
+        fontSize: 18,
+        fontFamily: "sans-serif",
         size: {
           width: 514.8,
           height: 296.4,
@@ -876,6 +914,8 @@ export const presetTwo: Div[] = [
           y: 0,
         },
         text: "www.uistudio.app",
+        fontSize: 18,
+        fontFamily: "sans-serif",
         size: {
           width: 442,
           height: 78,
@@ -925,6 +965,8 @@ export const presetTwo: Div[] = [
           y: 0,
         },
         text: "www.github.com/szilardjanko/ui-design-studio",
+        fontSize: 18,
+        fontFamily: "sans-serif",
         size: {
           width: 442,
           height: 78,
@@ -966,6 +1008,8 @@ export const presetTwo: Div[] = [
       y: 4.444444444444444,
     },
     text: "New UI container 5",
+    fontSize: 18,
+    fontFamily: "sans-serif",
     size: {
       width: 545.9999999999999,
       height: 530.4,
@@ -1012,6 +1056,8 @@ export const presetTwo: Div[] = [
       y: 92.59259259259258,
     },
     text: "Toggle Menu",
+    fontSize: 18,
+    fontFamily: "sans-serif",
     size: {
       width: 280.79999999999995,
       height: 46.8,
@@ -1074,6 +1120,8 @@ export const presetThree: Div[] = [
           y: 0,
         },
         text: "DCL UI Design Studio: an open sourced web app enabling anyone to design interactive UIs for DCL scenes without coding. This drag-and-drop platform simplifies UI creation, enhancing accessibility and efficiency for creators.",
+        fontSize: 18,
+        fontFamily: "sans-serif",
         size: {
           width: 208,
           height: 234,
@@ -1108,6 +1156,8 @@ export const presetThree: Div[] = [
       y: 4.444444444444445,
     },
     text: "New UI container 1",
+    fontSize: 18,
+    fontFamily: "sans-serif",
     size: {
       width: 405.59999999999997,
       height: 608.4,
@@ -1160,6 +1210,8 @@ export const presetThree: Div[] = [
       y: 91.11111111111111,
     },
     text: "",
+    fontSize: 18,
+    fontFamily: "sans-serif",
     size: {
       width: 100,
       height: 50,

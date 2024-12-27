@@ -8,17 +8,17 @@ import { UiEditor } from "@/components/docs/UiEditor";
 import { useSideBar } from "@/context/SideBarContext";
 import React from "react";
 
-const Docs = () => {
+export default function Docs() {
   const { sideBarDocsOptions } = useSideBar();
 
   return (
     <div className="flex flex-row text-white">
       <SideBarDocs />
-      <div className="flex flex-col w-full">
+      <div className="flex w-full flex-col">
         <div className="text-center text-3xl font-bold md:text-4xl">
           Documentation
         </div>
-        <div className="flex flex-row mt-2 max-h-[calc(100vh-10rem)] overflow-y-auto">
+        <div className="mt-2 flex max-h-[calc(100vh-10rem)] flex-row overflow-y-auto">
           {sideBarDocsOptions === "components" && <Components />}
           {sideBarDocsOptions === "preset" && <Preset />}
           {sideBarDocsOptions === "social" && <Social />}
@@ -29,6 +29,4 @@ const Docs = () => {
       </div>
     </div>
   );
-};
-
-export default Docs;
+}

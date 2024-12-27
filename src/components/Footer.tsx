@@ -13,7 +13,7 @@ export const Footer = () => {
           Github
         </Link>
         <Link
-          href="/Feedback"
+          href="/feedback"
           className="px-3 py-2 text-white hover:bg-slate-700"
         >
           Feedback

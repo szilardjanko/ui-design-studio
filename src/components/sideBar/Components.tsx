@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "../Button";
-import { UiElementTypes } from "@/pages/CreateUi";
+import { UiElementTypes } from "@/pages/create";
 import {
   ButtonIcon,
   ContainerIcon,
@@ -14,7 +14,7 @@ type ComponentsProps = {
 
 export const Components = ({ addDiv }: ComponentsProps) => {
   return (
-    <div className="mt-2 flex flex-col border-t border-slate-500 pt-2 gap-1">
+    <div className="mt-2 flex flex-col gap-1 border-t border-slate-500 pt-2">
       <Button
         text="Container"
         onClick={() => addDiv("container")}

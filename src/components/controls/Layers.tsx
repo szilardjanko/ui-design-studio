@@ -1,4 +1,4 @@
-import { Div } from "@/pages/CreateUi";
+import { Div } from "@/pages/create";
 import React, { useEffect, useState } from "react";
 import { Lock, LockFill, Unlock, UnlockFill } from "../icons/Lock";
 import {

@@ -6,7 +6,7 @@ import {
   CaretRight,
   CaretRightFill,
 } from "../icons/LeftRightCaret";
-import { Div } from "@/pages/CreateUi";
+import { Div } from "@/pages/create";
 
 type PresetColorsProps = {
   div: Div;

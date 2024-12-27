@@ -7,7 +7,7 @@ import {
   AlignStart,
   AlignTop,
 } from "../icons/Align";
-import { Div } from "@/pages/CreateUi";
+import { Div } from "@/pages/create";
 import { Position } from "../UiElement";
 import { SelectedContainerLayout } from "./SelectedContainerLayout";
 

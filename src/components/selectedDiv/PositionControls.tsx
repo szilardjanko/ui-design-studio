@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { CustomNumberInput } from "./CustomNumberInput";
-import { Div } from "@/pages/CreateUi";
+import { Div } from "@/pages/create";
 import { Position, Size } from "../UiElement";
 import { SelectedContainerLayout } from "./SelectedContainerLayout";
 

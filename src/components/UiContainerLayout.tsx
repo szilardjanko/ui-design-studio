@@ -1,4 +1,4 @@
-import { Div } from "@/pages/CreateUi";
+import { Div } from "@/pages/create";
 import React from "react";
 import { Boundary, Position, Size, UiElement } from "./UiElement";
 

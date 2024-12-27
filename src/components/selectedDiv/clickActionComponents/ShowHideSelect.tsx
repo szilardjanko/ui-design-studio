@@ -1,4 +1,4 @@
-import { Div } from "@/pages/CreateUi";
+import { Div } from "@/pages/create";
 import React from "react";
 import { ActionTypeShow } from "../ClickActions";
 
@@ -44,8 +44,7 @@ export const ShowHideSelect = ({
             setterDivUuid: div.uuid,
             setterDivName: div.name,
             targetDivUuid: e.target.value,
-            targetDivName:
-            findDivNameByUuid(e.target.value, divs),
+            targetDivName: findDivNameByUuid(e.target.value, divs),
             show: true,
           });
         }}
