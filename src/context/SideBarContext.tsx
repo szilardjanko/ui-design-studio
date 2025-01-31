@@ -4,8 +4,7 @@ type SideBarTypes = "components" | "preset" | "social" | "";
 
 type SideBarDocsTypes =
   | "components"
-  | "preset"
-  | "social"
+  | "templates"
   | "controls"
   | "editor"
   | "uiCode"
