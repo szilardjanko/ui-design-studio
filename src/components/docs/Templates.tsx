@@ -17,7 +17,7 @@ export const Templates = () => {
         </h3>
         <ul className="list-inside list-disc">
           <li>
-            Click the "Preset Designs" button in the sidebar to view available
+            Click the &quot;Preset Designs&quot; button in the sidebar to view available
             templates.
           </li>
           <li>

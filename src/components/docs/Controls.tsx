@@ -61,7 +61,7 @@ export const Controls = () => {
             <ul className="list-circle ml-10 list-inside">
               <li>Use the zoom slider to adjust canvas zoom level</li>
               <li>
-                Click "Reset" to return to a zoom level that fits the screen
+                Click &quot;Reset&quot; to return to a zoom level that fits the screen
               </li>
             </ul>
           </li>

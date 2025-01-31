@@ -6,7 +6,7 @@ export default function DocsPage() {
     <DocsLayout>
       <div className="flex w-full max-w-4xl flex-col p-4">
         <p className="mb-8 text-lg">
-          Welcome to the DCL UI Design Studio documentation. Here you'll find
+          Welcome to the DCL UI Design Studio documentation. Here you will find
           comprehensive guides and documentation to help you start working with
           our UI design tool quickly and easily.
         </p>
